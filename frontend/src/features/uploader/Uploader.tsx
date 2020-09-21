@@ -40,11 +40,10 @@ export function Uploader() {
     };
 
     const uploadImage = async (base64EncodedImage: any) => {
-        console.log(base64EncodedImage);
         try {
             await fetch('http://localhost:8000/upload/', {
                 method: 'POST',
-                body: JSON.stringify({ data: base64EncodedImage }),
+                body: JSON.stringify({ image: base64EncodedImage }),
                 headers: { 'Content-Type': 'application/json' },
             });
 

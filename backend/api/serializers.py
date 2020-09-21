@@ -1,10 +1,9 @@
 from rest_framework import serializers
 
-from api.models import Image
+from .models import Image
 
 
-# Serializers define the API representation.
-class ImageSerializer(serializers.HyperlinkedModelSerializer):
+class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Image
-        fields = ["title", "cover"]
+        fields = ["image"]
