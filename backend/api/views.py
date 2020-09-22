@@ -1,23 +1,17 @@
-from rest_framework import status
-from rest_framework.parsers import FileUploadParser
+import cloudinary.uploader
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import ImageSerializer
-
 
 class UploadImageAPIView(APIView):
-    parser_class = (FileUploadParser,)
-
-    def post(self, request, *args, **kwargs):
-        file_serializer = ImageSerializer(data=request.data)
-
-        if file_serializer.is_valid():
-            file_serializer.save()
+    @staticmethod
+    def post(request):
+        try:
+            file = request.data.get("image")
+            response = cloudinary.uploader.upload(file)
             return Response(
-                file_serializer.data, status=status.HTTP_201_CREATED
+                {"status": "success", "data": response,}, status=201
             )
-        else:
-            return Response(
-                file_serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
+        except FileNotFoundError as error:
+            print(error)
+            return Response({"message": str(error)}, status=400)

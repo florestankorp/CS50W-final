@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/3.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
-
 import os
+
+import cloudinary
+
+from api import secrets
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,8 +23,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "8euaap_zkimp=9!ffzdvskpl4yl#mj9f0*mm_wotgcy0cm&074"
+SECRET_KEY = secrets.SECRET_KEY
 
+cloudinary.config(
+    cloud_name=secrets.CLOUD_NAME,
+    api_key=secrets.API_KEY,
+    api_secret=secrets.API_SECRET,
+)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -55,13 +63,7 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000", "http://127.0.0.1:3000"]
 
 ROOT_URLCONF = "api.urls"
-# REST_FRAMEWORK = {
-#     # Use Django's standard `django.contrib.auth` permissions,
-#     # or allow read-only access for unauthenticated users.
-#     "DEFAULT_PERMISSION_CLASSES": [
-#         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-#     ]
-# }
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
