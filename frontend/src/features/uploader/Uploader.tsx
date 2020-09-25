@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 
 export function Uploader() {
+    const newEmptyFile = new File([''], 'default');
     // hooks with initial values
     const [previewSource, setPreviewSource] = useState<string | ArrayBuffer | null>('');
-    const [selectedFile, setSelectedFile] = useState<File>(new File([''], 'default'));
+    const [selectedFile, setSelectedFile] = useState<File>(newEmptyFile);
     const [filePath, setFilePath] = useState<string>('');
 
     const handleValueInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +50,10 @@ export function Uploader() {
 
             setFilePath('');
             setPreviewSource('');
-        } catch (error) {}
+            // setSelectedFile(newEmptyFile);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
