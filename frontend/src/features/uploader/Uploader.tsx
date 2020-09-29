@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
+import { Base64EncodedImage } from '../../shared/models';
+import Spinner from '../../spinner.svg';
+import './Uploader.scss';
 
 export function Uploader() {
     const newEmptyFile = new File([''], 'default');
-    // hooks with initial values
-    const [previewSource, setPreviewSource] = useState<string | ArrayBuffer | null>('');
+
+    const [previewSource, setPreviewSource] = useState<Base64EncodedImage>('');
     const [selectedFile, setSelectedFile] = useState<File>(newEmptyFile);
     const [filePath, setFilePath] = useState<string>('');
+
+    const [hasError, setHasError] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
 
     const handleValueInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file: File = event.target.files![0];
@@ -17,6 +25,8 @@ export function Uploader() {
     };
 
     const previewFile = (file: File) => {
+        setHasError(false);
+        setErrorMessage('');
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = () => {
@@ -26,6 +36,7 @@ export function Uploader() {
     };
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        setPreviewSource('');
         event.preventDefault();
         if (!selectedFile) return;
 
@@ -40,19 +51,35 @@ export function Uploader() {
         };
     };
 
-    const uploadImage = async (base64EncodedImage: any) => {
+    const uploadImage = async (base64EncodedImage: Base64EncodedImage) => {
+        setHasError(false);
+        setErrorMessage('');
+        setIsLoading(true);
+
         try {
             await fetch('http://localhost:8000/upload/', {
                 method: 'POST',
                 body: JSON.stringify({ image: base64EncodedImage }),
                 headers: { 'Content-Type': 'application/json' },
-            });
+            }).then((response) => {
+                setIsLoading(false);
+                if (response.status === 400) {
+                    throw new Error('Please chose a file');
+                }
 
-            setFilePath('');
-            setPreviewSource('');
-            // setSelectedFile(newEmptyFile);
+                if (response.status === 201) {
+                    setIsLoading(false);
+                    setFilePath('');
+                    setPreviewSource('');
+                    setSelectedFile(newEmptyFile);
+                    setSuccessMessage('Success! File has been uploaded.');
+                }
+            });
         } catch (error) {
-            console.error(error);
+            setSuccessMessage('');
+            setIsLoading(false);
+            setHasError(true);
+            setErrorMessage(error.message);
         }
     };
 
@@ -73,6 +100,10 @@ export function Uploader() {
                 </button>
             </form>
             {previewSource && <img src={previewSource.toString()} alt="chosen" style={{ height: '300px' }} />}
+            {hasError && <span className="error-message">{errorMessage}</span>}
+            {isLoading && <img src={Spinner} alt="Loading Spinner" />}
+
+            {successMessage && <span className="success-message">{successMessage}</span>}
         </div>
     );
 }
