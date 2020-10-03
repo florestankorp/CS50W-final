@@ -1,6 +1,6 @@
-import { InitialSession } from './models';
+import { Session } from './models';
 
 export const UPLOAD_APP_KEY = 'uploadApp';
-export const initialSession: InitialSession = {
-    isLoggedIn: false,
+export const initialSession: Session = {
+    auth: { isLoggedIn: false },
 };

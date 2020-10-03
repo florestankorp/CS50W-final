@@ -17,12 +17,12 @@ export function Navbar() {
                     </Link>
                 </div>
                 <div className="navbar-end">
-                    <a className="navbar-item" href="/login">
+                    <Link className="navbar-item" to="/login">
                         Login
-                    </a>
-                    <a className="navbar-item" href="/register">
+                    </Link>
+                    <Link className="navbar-item" to="/register">
                         Register
-                    </a>
+                    </Link>
                 </div>
             </div>
         </nav>

@@ -6,6 +6,22 @@ export type PrivateRouteProps = {
     path: string;
 };
 
-export type InitialSession = {
-    isLoggedIn: boolean;
+export type Session = {
+    auth: {
+        isLoggedIn: boolean;
+    };
 };
+
+export interface AuthState {
+    token: string | null;
+    isAuthenticated: boolean;
+    isLoading: boolean;
+    user: UserAuthInput | null;
+}
+
+export interface UserAuthInput {
+    name: string;
+    email: string;
+    password: string;
+    passwordCOnf: string;
+}

@@ -1,21 +1,19 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.scss';
 import { Login } from './features/auth/Login';
 import { Register } from './features/auth/Register';
-import { PrivateRoute } from './features/common/PrivateRoute';
 import { Favs } from './features/Favs';
 import { Home } from './features/Home';
-import { Navbar } from './features/nav/Navbar';
+import { Navbar } from './features/Navbar';
 import { Uploader } from './features/uploader/Uploader';
-import { initialSession, UPLOAD_APP_KEY } from './shared/constants';
+import { init } from './shared/authSlice';
+import { PrivateRoute } from './shared/PrivateRoute';
 
 function App() {
-    // instantiate session storage if there are no values yet
-    const _sessionStorage = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
-    if (!Object.keys(_sessionStorage).length) {
-        sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(initialSession));
-    }
+    const dispatch = useDispatch();
+    dispatch(init());
 
     return (
         <div className="App">
