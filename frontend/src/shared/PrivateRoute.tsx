@@ -23,6 +23,10 @@ export function PrivateRoute(props: PrivateRouteProps): ReactElement {
                     return <Redirect to="/login" />;
                 }
 
+                if (isAuthenticated) {
+                    return <Redirect to="/" />;
+                }
+
                 return <Component {...props} />;
             }}
         />

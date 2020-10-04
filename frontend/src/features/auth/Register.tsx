@@ -1,58 +1,78 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-type Inputs = {
-    email: string;
-    password: string;
-    passwordConf: string;
-};
+import { EMAIL_REGEX } from '../../shared/constants';
+import { UserAuthInput } from '../../shared/models';
+
 export function Register() {
-    const { register, handleSubmit, errors } = useForm<Inputs>();
-    const onSubmit = (data) => console.log(data);
+    const { register, handleSubmit, errors, watch } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
+    const passwordRef = useRef({});
+    passwordRef.current = watch('password', '');
+
+    const onSubmit = (data) => {
+        console.log(data);
+    };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="columns is-centered">
-                <div className="column is-one-quarter">
-                    <div className="field">
-                        <p className="control">
-                            <input
-                                className="input"
-                                name="email"
-                                placeholder="Email"
-                                ref={register({ required: true })}
-                            />
-                            {errors.email && <span>This field is required</span>}
-                        </p>
-                    </div>
-                    <div className="field">
-                        <p className="control">
-                            <input
-                                className="input"
-                                name="password"
-                                type="password"
-                                placeholder="Password"
-                                ref={register({ required: true })}
-                            />
-                        </p>
-                    </div>
-                    <div className="field">
-                        <p className="control">
-                            <input
-                                className="input"
-                                name="passwordConf"
-                                type="password"
-                                placeholder="Confirm Password"
-                                ref={register({ required: true })}
-                            />
-                        </p>
-                    </div>
-                    <div className="field">
-                        <p className="control">
-                            <input className="button is-success" type="submit" value="Register" />
-                        </p>
+        <section className="section">
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="columns is-centered">
+                    <div className="column is-one-quarter">
+                        <div className="field">
+                            <p className="control">
+                                <input
+                                    className="input"
+                                    name="email"
+                                    placeholder="Email"
+                                    ref={register({ required: 'Email is required', pattern: EMAIL_REGEX })}
+                                />
+                                {errors.email && errors.email.message}
+                            </p>
+                        </div>
+                        <div className="field">
+                            <p className="control">
+                                <input
+                                    className="input"
+                                    name="password"
+                                    type="password"
+                                    placeholder="Password"
+                                    ref={register({
+                                        required: 'Password is required',
+                                        minLength: {
+                                            value: 8,
+                                            message: 'Password has to be at least 8 characters long',
+                                        },
+                                    })}
+                                />
+                                {errors.password && errors.password.message}
+                            </p>
+                        </div>
+                        <div className="field">
+                            <p className="control">
+                                <input
+                                    className="input"
+                                    name="passwordConf"
+                                    type="password"
+                                    placeholder="Confirm Password"
+                                    ref={register({
+                                        validate: (value) => value === passwordRef.current || 'Passwords do not match',
+                                        required: 'Password confirmation is required',
+                                        minLength: {
+                                            value: 8,
+                                            message: 'Password has to be at least 8 characters long',
+                                        },
+                                    })}
+                                />
+                                {errors.passwordConf && errors.passwordConf.message}
+                            </p>
+                        </div>
+                        <div className="field">
+                            <p className="control">
+                                <input className="button is-success" type="submit" value="Register" />
+                            </p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </form>
+            </form>
+        </section>
     );
 }

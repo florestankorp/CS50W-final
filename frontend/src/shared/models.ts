@@ -20,8 +20,7 @@ export interface AuthState {
 }
 
 export interface UserAuthInput {
-    name: string;
     email: string;
     password: string;
-    passwordCOnf: string;
+    passwordConf: string;
 }

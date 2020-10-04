@@ -13,6 +13,7 @@ import { PrivateRoute } from './shared/PrivateRoute';
 
 function App() {
     const dispatch = useDispatch();
+    document.body.classList.add('has-navbar-fixed-top');
     dispatch(init());
 
     return (

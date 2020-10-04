@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 
 export function Navbar() {
     return (
-        <nav className="navbar is-dark">
-            <div id="navbarExampleTransparentExample" className="navbar-menu">
+        <nav className="navbar is-fixed-top is-dark">
+            <div className="navbar-menu">
                 <div className="navbar-start">
                     <Link className="navbar-item" to="/">
                         Home
