@@ -1,15 +1,21 @@
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from 'react-redux';
+import { registerCall, selectAuthLoadingState } from '../../shared/authSlice';
 import { EMAIL_REGEX } from '../../shared/constants';
 import { UserAuthInput } from '../../shared/models';
+import Spinner from '../../spinner.svg';
 
 export function Register() {
     const { register, handleSubmit, errors, watch } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
     const passwordRef = useRef({});
+    const dispatch = useDispatch();
+    const isLoading = useSelector(selectAuthLoadingState);
+
     passwordRef.current = watch('password', '');
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit: any = (data) => {
+        return dispatch(registerCall());
     };
 
     return (
@@ -23,7 +29,13 @@ export function Register() {
                                     className="input"
                                     name="email"
                                     placeholder="Email"
-                                    ref={register({ required: 'Email is required', pattern: EMAIL_REGEX })}
+                                    ref={register({
+                                        required: 'Email is required',
+                                        pattern: {
+                                            value: EMAIL_REGEX,
+                                            message: 'Please enter a valid email address.',
+                                        },
+                                    })}
                                 />
                                 {errors.email && errors.email.message}
                             </p>
@@ -37,10 +49,10 @@ export function Register() {
                                     placeholder="Password"
                                     ref={register({
                                         required: 'Password is required',
-                                        minLength: {
-                                            value: 8,
-                                            message: 'Password has to be at least 8 characters long',
-                                        },
+                                        // minLength: {
+                                        //     value: 8,
+                                        //     message: 'Password has to be at least 8 characters long',
+                                        // },
                                     })}
                                 />
                                 {errors.password && errors.password.message}
@@ -56,10 +68,10 @@ export function Register() {
                                     ref={register({
                                         validate: (value) => value === passwordRef.current || 'Passwords do not match',
                                         required: 'Password confirmation is required',
-                                        minLength: {
-                                            value: 8,
-                                            message: 'Password has to be at least 8 characters long',
-                                        },
+                                        // minLength: {
+                                        //     value: 8,
+                                        //     message: 'Password has to be at least 8 characters long',
+                                        // },
                                     })}
                                 />
                                 {errors.passwordConf && errors.passwordConf.message}
@@ -70,6 +82,7 @@ export function Register() {
                                 <input className="button is-success" type="submit" value="Register" />
                             </p>
                         </div>
+                        {isLoading && <img src={Spinner} alt="Loading Spinner" />}
                     </div>
                 </div>
             </form>

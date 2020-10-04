@@ -13,10 +13,11 @@ export type Session = {
 };
 
 export interface AuthState {
-    token: string | null;
+    token: string;
     isAuthenticated: boolean;
     isLoading: boolean;
-    user: UserAuthInput | null;
+    errors: string[];
+    email: string;
 }
 
 export interface UserAuthInput {

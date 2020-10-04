@@ -8,13 +8,13 @@ import { Favs } from './features/Favs';
 import { Home } from './features/Home';
 import { Navbar } from './features/Navbar';
 import { Uploader } from './features/uploader/Uploader';
-import { init } from './shared/authSlice';
+import { authInit } from './shared/authSlice';
 import { PrivateRoute } from './shared/PrivateRoute';
 
 function App() {
     const dispatch = useDispatch();
     document.body.classList.add('has-navbar-fixed-top');
-    dispatch(init());
+    dispatch(authInit());
 
     return (
         <div className="App">
