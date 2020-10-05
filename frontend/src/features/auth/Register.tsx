@@ -1,10 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { authCall, clearAuthError, selectAuthError, selectAuthLoadingState } from '../../shared/authSlice';
+import { useHistory } from 'react-router';
+import {
+    authCall,
+    clearAuthError,
+    selectAuthError,
+    selectAuthLoadingState,
+    selectAuthLoginState,
+} from '../../shared/authSlice';
 import { EMAIL_REGEX, REGISTER_URL } from '../../shared/constants';
 import { UserAuthInput } from '../../shared/models';
 import Spinner from '../../spinner.svg';
+import './Auth.scss';
 
 export function Register() {
     const { register, handleSubmit, errors, watch, reset } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
@@ -12,6 +20,14 @@ export function Register() {
     const dispatch = useDispatch();
     const isLoading = useSelector(selectAuthLoadingState);
     const authError = useSelector(selectAuthError);
+    const isAuthenticated = useSelector(selectAuthLoginState);
+    const history = useHistory();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            history.push('/');
+        }
+    }, [isAuthenticated]);
 
     passwordRef.current = watch('password', '');
 
@@ -81,11 +97,11 @@ export function Register() {
                             </p>
                         </div>
                         <div className="field">
-                            <p className="control">
+                            <p className="control button-control">
                                 <input className="button is-success" type="submit" value="Register" />
+                                {isLoading && <img src={Spinner} alt="Loading Spinner" />}
                             </p>
                         </div>
-                        {isLoading && <img src={Spinner} alt="Loading Spinner" />}
                         {authError && <span>{authError}</span>}
                     </div>
                 </div>

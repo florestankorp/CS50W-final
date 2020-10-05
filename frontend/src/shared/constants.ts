@@ -8,3 +8,4 @@ export const initialSession: Session = {
 
 export const REGISTER_URL = 'http://localhost:8000/api/auth/register';
 export const LOGIN_URL = 'http://localhost:8000/api/auth/login';
+export const TYPE_ERROR = 'Failed to fetch';

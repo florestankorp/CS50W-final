@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { initialSession, UPLOAD_APP_KEY } from './constants';
+import { initialSession, TYPE_ERROR, UPLOAD_APP_KEY } from './constants';
 import { AuthState, Session, UserAuthInput } from './models';
 import { RootState } from './store';
+
 const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
 
 const initialState: AuthState = {
@@ -16,6 +17,10 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
+        logOut: (state) => {
+            sessionStorage.clear();
+            Object.assign(state, initialState);
+        },
         authInit: (state) => {
             const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
             if (!!Object.keys(_sessionStorage).length) {
@@ -55,8 +60,7 @@ export const authSlice = createSlice({
             state.isLoading = false;
             state.isAuthenticated = false;
 
-            const key = Object.keys(payload)[0];
-            const message = payload[key][0];
+            const message = payload === TYPE_ERROR ? 'Server offline. Please try again later' : payload;
             state.error = message;
 
             sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(initialSession));
@@ -64,7 +68,7 @@ export const authSlice = createSlice({
     },
 });
 
-export const { authInit, authStart, authFailure, authSuccess, clearAuthError } = authSlice.actions;
+export const { authInit, authStart, authFailure, authSuccess, clearAuthError, logOut } = authSlice.actions;
 export const selectAuthLoginState = (state: RootState) => state.auth.isAuthenticated;
 export const selectAuthLoadingState = (state: RootState) => state.auth.isLoading;
 export const selectAuthToken = (state: RootState) => state.auth.token;
@@ -78,18 +82,23 @@ export function authCall(data: UserAuthInput, url: string) {
 
     return async (dispatch) => {
         dispatch(authStart());
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password }),
+            });
 
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password }),
-        });
-
-        const data = await response.json();
-        if (response.ok) {
-            dispatch(authSuccess(data));
-        } else {
-            dispatch(authFailure(data));
+            const data = await response.json();
+            if (response.ok) {
+                dispatch(authSuccess(data));
+            } else {
+                const key = Object.keys(data)[0];
+                const message = data[key] ? data[key][0] : response.statusText;
+                throw Error(message);
+            }
+        } catch (error) {
+            dispatch(authFailure(error.message));
         }
     };
 }

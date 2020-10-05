@@ -1,16 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { authCall, clearAuthError, selectAuthError, selectAuthLoadingState } from '../../shared/authSlice';
+import { useHistory } from 'react-router';
+import {
+    authCall,
+    clearAuthError,
+    selectAuthError,
+    selectAuthLoadingState,
+    selectAuthLoginState,
+} from '../../shared/authSlice';
 import { EMAIL_REGEX, LOGIN_URL } from '../../shared/constants';
 import { UserAuthInput } from '../../shared/models';
 import Spinner from '../../spinner.svg';
 
 export function Login() {
-    const { register, handleSubmit, errors, watch, reset } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
+    const { register, handleSubmit, errors, reset } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
+
     const dispatch = useDispatch();
     const isLoading = useSelector(selectAuthLoadingState);
     const authError = useSelector(selectAuthError);
+    const isAuthenticated = useSelector(selectAuthLoginState);
+    const history = useHistory();
+
+    useEffect(() => {
+        if (isAuthenticated) {
+            history.push('/');
+        }
+    }, [isAuthenticated]);
 
     const onSubmit: any = (data) => {
         dispatch(clearAuthError());
