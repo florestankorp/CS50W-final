@@ -9,7 +9,6 @@ export function PrivateRoute(props: PrivateRouteProps): ReactElement {
     const { component: Component, ...rest } = props;
     const isAuthenticated = useSelector(selectAuthLoginState);
     const isLoading = useSelector(selectAuthLoadingState);
-    console.log(isAuthenticated);
 
     return (
         <Route
@@ -21,10 +20,6 @@ export function PrivateRoute(props: PrivateRouteProps): ReactElement {
 
                 if (!isAuthenticated) {
                     return <Redirect to="/login" />;
-                }
-
-                if (isAuthenticated) {
-                    return <Redirect to="/" />;
                 }
 
                 return <Component {...props} />;

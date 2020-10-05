@@ -1,14 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { initialSession, UPLOAD_APP_KEY } from './constants';
-import { AuthState, Session } from './models';
+import { AuthState, Session, UserAuthInput } from './models';
 import { RootState } from './store';
+const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
 
 const initialState: AuthState = {
-    token: '',
-    isAuthenticated: false,
+    token: (_sessionStorage.auth && _sessionStorage.auth.token) || '',
+    isAuthenticated: (_sessionStorage.auth && _sessionStorage.auth.isAuthenticated) || false,
+    username: (_sessionStorage.auth && _sessionStorage.auth.username) || '',
     isLoading: false,
-    errors: [],
-    email: '',
+    error: '',
 };
 
 export const authSlice = createSlice({
@@ -18,62 +19,77 @@ export const authSlice = createSlice({
         authInit: (state) => {
             const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
             if (!!Object.keys(_sessionStorage).length) {
-                state.isAuthenticated = !!_sessionStorage.auth.isLoggedIn;
+                state.token = _sessionStorage.auth.token || '';
+                state.isAuthenticated = !!_sessionStorage.auth.isAuthenticated;
+                state.username = _sessionStorage.auth.username || '';
             } else {
                 state.isAuthenticated = false;
                 sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(initialSession));
             }
         },
-        authRegister: (state) => {
+        authStart: (state) => {
             state.isLoading = true;
-            // state.isAuthenticated = true;
-
-            // let _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
-            // _sessionStorage.auth.isLoggedIn = true;
-            // sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(_sessionStorage));
         },
-        authRegisterSuccess: (state, { payload }) => {
+        clearAuthError: (state) => {
+            state.error = '';
+        },
+        authSuccess: (state: AuthState, { payload }) => {
+            const {
+                token,
+                user: { username },
+            } = payload;
+            let _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
+
             state.isLoading = false;
             state.isAuthenticated = true;
-            state.token = payload.token;
-            console.log('authRegisterSuccess', payload);
+            state.token = token;
+            state.username = username;
 
-            // let _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
-            // _sessionStorage.auth.isLoggedIn = true;
-            // sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(_sessionStorage));
+            _sessionStorage.auth.isAuthenticated = true;
+            _sessionStorage.auth.token = token;
+            _sessionStorage.auth.username = username;
+
+            sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(_sessionStorage));
         },
-        authRegisterFailure: (state, { payload }) => {
+        authFailure: (state, { payload }) => {
+            state.isLoading = false;
+            state.isAuthenticated = false;
+
             const key = Object.keys(payload)[0];
             const message = payload[key][0];
-            state.errors.push(message);
+            state.error = message;
+
+            sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(initialSession));
         },
     },
 });
 
-export const { authInit, authRegister, authRegisterFailure, authRegisterSuccess } = authSlice.actions;
+export const { authInit, authStart, authFailure, authSuccess, clearAuthError } = authSlice.actions;
 export const selectAuthLoginState = (state: RootState) => state.auth.isAuthenticated;
 export const selectAuthLoadingState = (state: RootState) => state.auth.isLoading;
 export const selectAuthToken = (state: RootState) => state.auth.token;
-export const selectAuthEmail = (state: RootState) => state.auth.email;
-export const selectAuthErrors = (state: RootState) => state.auth.errors;
+export const selectAuthUsername = (state: RootState) => state.auth.username;
+export const selectAuthError = (state: RootState) => state.auth.error;
 
 export default authSlice.reducer;
 
-export function registerCall() {
-    return async (dispatch) => {
-        dispatch(authRegister());
+export function authCall(data: UserAuthInput, url: string) {
+    const { username, password } = data;
 
-        const response = await fetch('http://localhost:8000/api/auth/register', {
+    return async (dispatch) => {
+        dispatch(authStart());
+
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: 'flo@hogwarts.com', password: '123' }),
+            body: JSON.stringify({ username, password }),
         });
 
         const data = await response.json();
         if (response.ok) {
-            dispatch(authRegisterSuccess(data));
+            dispatch(authSuccess(data));
         } else {
-            dispatch(authRegisterFailure(data));
+            dispatch(authFailure(data));
         }
     };
 }

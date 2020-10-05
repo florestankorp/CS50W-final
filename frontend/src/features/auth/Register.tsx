@@ -1,21 +1,24 @@
 import React, { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { registerCall, selectAuthLoadingState } from '../../shared/authSlice';
-import { EMAIL_REGEX } from '../../shared/constants';
+import { authCall, clearAuthError, selectAuthError, selectAuthLoadingState } from '../../shared/authSlice';
+import { EMAIL_REGEX, REGISTER_URL } from '../../shared/constants';
 import { UserAuthInput } from '../../shared/models';
 import Spinner from '../../spinner.svg';
 
 export function Register() {
-    const { register, handleSubmit, errors, watch } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
+    const { register, handleSubmit, errors, watch, reset } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
     const passwordRef = useRef({});
     const dispatch = useDispatch();
     const isLoading = useSelector(selectAuthLoadingState);
+    const authError = useSelector(selectAuthError);
 
     passwordRef.current = watch('password', '');
 
     const onSubmit: any = (data) => {
-        return dispatch(registerCall());
+        dispatch(clearAuthError());
+        dispatch(authCall(data, REGISTER_URL));
+        reset();
     };
 
     return (
@@ -27,7 +30,7 @@ export function Register() {
                             <p className="control">
                                 <input
                                     className="input"
-                                    name="email"
+                                    name="username"
                                     placeholder="Email"
                                     ref={register({
                                         required: 'Email is required',
@@ -37,7 +40,7 @@ export function Register() {
                                         },
                                     })}
                                 />
-                                {errors.email && errors.email.message}
+                                {errors.username && errors.username.message}
                             </p>
                         </div>
                         <div className="field">
@@ -49,10 +52,10 @@ export function Register() {
                                     placeholder="Password"
                                     ref={register({
                                         required: 'Password is required',
-                                        // minLength: {
-                                        //     value: 8,
-                                        //     message: 'Password has to be at least 8 characters long',
-                                        // },
+                                        minLength: {
+                                            value: 8,
+                                            message: 'Password has to be at least 8 characters long',
+                                        },
                                     })}
                                 />
                                 {errors.password && errors.password.message}
@@ -68,10 +71,10 @@ export function Register() {
                                     ref={register({
                                         validate: (value) => value === passwordRef.current || 'Passwords do not match',
                                         required: 'Password confirmation is required',
-                                        // minLength: {
-                                        //     value: 8,
-                                        //     message: 'Password has to be at least 8 characters long',
-                                        // },
+                                        minLength: {
+                                            value: 8,
+                                            message: 'Password has to be at least 8 characters long',
+                                        },
                                     })}
                                 />
                                 {errors.passwordConf && errors.passwordConf.message}
@@ -83,6 +86,7 @@ export function Register() {
                             </p>
                         </div>
                         {isLoading && <img src={Spinner} alt="Loading Spinner" />}
+                        {authError && <span>{authError}</span>}
                     </div>
                 </div>
             </form>

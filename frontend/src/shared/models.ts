@@ -8,7 +8,9 @@ export type PrivateRouteProps = {
 
 export type Session = {
     auth: {
-        isLoggedIn: boolean;
+        isAuthenticated: boolean;
+        token?: string;
+        username?: string;
     };
 };
 
@@ -16,12 +18,12 @@ export interface AuthState {
     token: string;
     isAuthenticated: boolean;
     isLoading: boolean;
-    errors: string[];
-    email: string;
+    error: string;
+    username: string;
 }
 
 export interface UserAuthInput {
-    email: string;
+    username: string;
     password: string;
     passwordConf: string;
 }
