@@ -22,6 +22,19 @@ export interface AuthState {
     username: string;
 }
 
+export interface ImageState {
+    images: Image[];
+    isLoading: boolean;
+    error: string;
+}
+
+export interface Image {
+    asset_id: string;
+    public_id: string;
+    secure_url: string;
+    created_at: string;
+}
+
 export interface UserAuthInput {
     username: string;
     password: string;

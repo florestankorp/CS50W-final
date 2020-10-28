@@ -72,7 +72,7 @@ export function Login() {
                         </div>
                         <div className="field">
                             <p className="control">
-                                <input className="button is-success" type="submit" value="Register" />
+                                <input className="button is-success" type="submit" value="Login" />
                             </p>
                         </div>
                         {isLoading && <img src={Spinner} alt="Loading Spinner" />}

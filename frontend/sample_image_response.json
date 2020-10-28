@@ -1,0 +1,18 @@
+{
+    "resources": [
+        {
+            "asset_id": "ae0c3ae197ad7d07f832e239ca81cfe8",
+            "public_id": "nqothvajpvu3zkp1tmdf",
+            "format": "jpg",
+            "version": 1603899844,
+            "resource_type": "image",
+            "type": "upload",
+            "created_at": "2020-10-28T15:44:04Z",
+            "bytes": 164776,
+            "width": 1130,
+            "height": 1367,
+            "url": "http://res.cloudinary.com/florestancloudinary/image/upload/v1603899844/nqothvajpvu3zkp1tmdf.jpg",
+            "secure_url": "https://res.cloudinary.com/florestancloudinary/image/upload/v1603899844/nqothvajpvu3zkp1tmdf.jpg"
+        }
+    ]
+}

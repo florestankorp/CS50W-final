@@ -20,18 +20,25 @@ class RegisterAPI(generics.GenericAPIView):
 
 
 class LoginAPI(generics.GenericAPIView):
-    def post(self, request):
-        serializer = LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data
-        _, token = AuthToken.objects.create(user)
+    @staticmethod
+    def post(request):
+        try:
+            serializer = LoginSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user = serializer.validated_data
+            _, token = AuthToken.objects.create(user)
 
-        return Response(
-            {
-                "user": UserSerializer(user, context={"request": request}).data,
-                "token": token,
-            }
-        )
+            return Response(
+                {
+                    "user": UserSerializer(
+                        user, context={"request": request}
+                    ).data,
+                    "token": token,
+                }
+            )
+        except Exception as error:
+            print(error)
+            return Response({"message": str(error)}, status=400)
 
 
 class UserAPI(generics.RetrieveAPIView):

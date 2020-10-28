@@ -7,13 +7,13 @@ import {
     clearAuthError,
     selectAuthError,
     selectAuthLoadingState,
-    selectAuthLoginState,
+    selectAuthLoginState
 } from '../../shared/authSlice';
 import { EMAIL_REGEX, REGISTER_URL } from '../../shared/constants';
 import { UserAuthInput } from '../../shared/models';
 import Spinner from '../../spinner.svg';
 import './Auth.scss';
-
+  
 export function Register() {
     const { register, handleSubmit, errors, watch, reset } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
     const passwordRef = useRef({});

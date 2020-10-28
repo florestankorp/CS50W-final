@@ -17,11 +17,11 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        logOut: (state) => {
+        logOut: (state: AuthState) => {
             sessionStorage.clear();
             Object.assign(state, initialState);
         },
-        authInit: (state) => {
+        authInit: (state: AuthState) => {
             const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
             if (!!Object.keys(_sessionStorage).length) {
                 state.token = _sessionStorage.auth.token || '';
@@ -32,10 +32,10 @@ export const authSlice = createSlice({
                 sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(initialSession));
             }
         },
-        authStart: (state) => {
+        authStart: (state: AuthState) => {
             state.isLoading = true;
         },
-        clearAuthError: (state) => {
+        clearAuthError: (state: AuthState) => {
             state.error = '';
         },
         authSuccess: (state: AuthState, { payload }) => {
@@ -56,7 +56,7 @@ export const authSlice = createSlice({
 
             sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(_sessionStorage));
         },
-        authFailure: (state, { payload }) => {
+        authFailure: (state: AuthState, { payload }) => {
             state.isLoading = false;
             state.isAuthenticated = false;
 
@@ -69,6 +69,7 @@ export const authSlice = createSlice({
 });
 
 export const { authInit, authStart, authFailure, authSuccess, clearAuthError, logOut } = authSlice.actions;
+
 export const selectAuthLoginState = (state: RootState) => state.auth.isAuthenticated;
 export const selectAuthLoadingState = (state: RootState) => state.auth.isLoading;
 export const selectAuthToken = (state: RootState) => state.auth.token;
