@@ -84,26 +84,40 @@ export function Uploader() {
     };
 
     return (
-        <div>
-            <h1 className="title">Upload an Image</h1>
-            <form onSubmit={handleSubmit} className="form">
-                <input
-                    id="fileInput"
-                    type="file"
-                    name="image"
-                    onChange={handleValueInputChange}
-                    value={filePath}
-                    className="form-input"
-                />
-                <button className="btn" type="submit">
-                    Submit
-                </button>
-            </form>
-            {previewSource && <img src={previewSource.toString()} alt="chosen" style={{ height: '300px' }} />}
-            {hasError && <span className="error-message">{errorMessage}</span>}
-            {isLoading && <img src={Spinner} alt="Loading Spinner" />}
-
-            {successMessage && <span className="success-message">{successMessage}</span>}
-        </div>
+        <section className="section">
+            <div className="columns is-centered">
+                <div className="column">
+                    <h1 className="title has-text-centered">Upload an Image</h1>
+                    <form onSubmit={handleSubmit} className="upload-form">
+                        <div className="file field has-addons has-addons-centered">
+                            <label className="file-label">
+                                <input
+                                    className="file-input button"
+                                    type="file"
+                                    id="fileInput"
+                                    name="image"
+                                    onChange={handleValueInputChange}
+                                    value={filePath}
+                                />
+                                <span className="file-cta">Choose a file…</span>
+                            </label>
+                            <button className="button is-primary" type="submit">
+                                <span>Submit</span>
+                            </button>
+                        </div>
+                        <div className="file field has-addons has-addons-centered">
+                            {hasError && <span className="error-message has-text-centered">{errorMessage}</span>}
+                            {previewSource && (
+                                <img src={previewSource.toString()} alt="chosen" style={{ height: '300px' }} />
+                            )}
+                            {isLoading && <img src={Spinner} alt="Loading Spinner" />}
+                            {successMessage && (
+                                <span className="success-message has-text-centered">{successMessage}</span>
+                            )}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
     );
 }

@@ -17,23 +17,33 @@ export const imageSlice = createSlice({
             state.isLoading = true;
         },
         fetchImagesSuccess: (state: ImageState, { payload }) => {
+            state.isLoading = false;
+            state.error = '';
             state.images = payload.data.resources;
         },
-        fetchImagesFailure: (state: ImageState, { payload }) => {},
+        fetchImagesFailure: (state: ImageState, { payload }) => {
+            state.isLoading = false;
+            state.error = payload;
+        },
     },
 });
 
 export const { fetchImagesStart, fetchImagesSuccess, fetchImagesFailure } = imageSlice.actions;
-export const selectImageState = (state: RootState) => state.image.images;
+
+export const selectedImages = (state: RootState) => state.image.images;
+export const imagesAreLoading = (state: RootState) => state.image.isLoading;
+
 export default imageSlice.reducer;
 
-export function fetchImages() {
+export function fetchImages(tag: string) {
+    const encodedValue = encodeURIComponent(tag);
+
     // ask wilco wtf
     return async (dispatch) => {
         dispatch(fetchImagesStart);
 
         try {
-            const response = await fetch(LIST_URL);
+            const response = await fetch(`${LIST_URL}?tag=${encodedValue}`);
             const data = await response.json();
             if (response.ok) {
                 dispatch(fetchImagesSuccess(data));

@@ -19,9 +19,9 @@ class UploadImageAPIView(APIView):
 class ListImagesAPIView(APIView):
     @staticmethod
     def get(request):
-        print()
         try:
-            response = cloudinary.api.resources()
+            tag = request.query_params.get("tag")
+            response = cloudinary.api.resources_by_tag(tag)
             return Response({"status": "success", "data": response}, status=200)
         except Exception as error:
             print(error)
