@@ -35,15 +35,16 @@ export const imagesAreLoading = (state: RootState) => state.image.isLoading;
 
 export default imageSlice.reducer;
 
-export function fetchImages(tag: string) {
-    const encodedValue = encodeURIComponent(tag);
+// no tag fetches all images
+export function fetchImages(tag?: string) {
+    const encodedValue = tag ? encodeURIComponent(tag) : '';
+    const param = encodedValue ? `?tag=${encodedValue}` : '';
 
-    // ask wilco wtf
     return async (dispatch) => {
         dispatch(fetchImagesStart);
 
         try {
-            const response = await fetch(`${LIST_URL}?tag=${encodedValue}`);
+            const response = await fetch(`${LIST_URL}${param}`);
             const data = await response.json();
             if (response.ok) {
                 dispatch(fetchImagesSuccess(data));

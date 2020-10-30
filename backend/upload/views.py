@@ -21,7 +21,10 @@ class ListImagesAPIView(APIView):
     def get(request):
         try:
             tag = request.query_params.get("tag")
-            response = cloudinary.api.resources_by_tag(tag)
+            if tag is None:
+                response = cloudinary.api.resources(max_results=50)
+            else:
+                response = cloudinary.api.resources_by_tag(tag)
             return Response({"status": "success", "data": response}, status=200)
         except Exception as error:
             print(error)

@@ -1,6 +1,8 @@
 #!/bin/bash
-cd ./frontend
-npm run start
+cwd=$(pwd)
 
-cd ../backend
-python3 manage.py runserver
+frontend="$cwd/frontend.sh"
+backend="$cwd/backend.sh"
+
+gnome-terminal --tab -e $frontend
+gnome-terminal --tab -e $backend
