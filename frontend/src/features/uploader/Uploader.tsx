@@ -1,4 +1,7 @@
+import { faFileUpload } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
+import { UPLOAD_URL } from '../../shared/constants';
 import { Base64EncodedImage } from '../../shared/models';
 import Spinner from '../../spinner.svg';
 import './Uploader.scss';
@@ -57,7 +60,7 @@ export function Uploader() {
         setIsLoading(true);
 
         try {
-            await fetch('http://localhost:8000/upload/', {
+            await fetch(UPLOAD_URL, {
                 method: 'POST',
                 body: JSON.stringify({ image: base64EncodedImage }),
                 headers: { 'Content-Type': 'application/json' },
@@ -99,9 +102,15 @@ export function Uploader() {
                                     onChange={handleValueInputChange}
                                     value={filePath}
                                 />
-                                <span className="file-cta">Choose a file…</span>
+
+                                <span className="file-cta">
+                                    <span className="file-icon">
+                                        <FontAwesomeIcon icon={faFileUpload} />
+                                    </span>
+                                    <span className="file-label">Choose a file…</span>
+                                </span>
                             </label>
-                            <button className="button is-primary" type="submit">
+                            <button className="button is-success" type="submit">
                                 <span>Submit</span>
                             </button>
                         </div>

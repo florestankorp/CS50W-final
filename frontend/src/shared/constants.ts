@@ -9,5 +9,7 @@ export const initialSession: Session = {
 
 export const REGISTER_URL = 'http://localhost:8000/api/auth/register';
 export const LOGIN_URL = 'http://localhost:8000/api/auth/login';
-export const LIST_URL = 'http://localhost:8000/list/';
+export const UPLOAD_URL = 'http://localhost:8000/upload';
+export const LIST_URL = 'http://localhost:8000/list';
+export const LIKE_URL = 'http://localhost:8000/like';
 export const TYPE_ERROR = 'Failed to fetch';

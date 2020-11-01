@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchImages, imagesAreLoading, selectedImages } from '../../shared/imageSlice';
+import { makeChunks } from '../../shared/utils';
 import Spinner from '../../spinner.svg';
 import './Home.scss';
+import { ImageCard } from './ImageCard';
 
 export function Home() {
     const dispatch = useDispatch();
@@ -10,13 +12,10 @@ export function Home() {
 
     const images = useSelector(selectedImages);
     const chunkSize = images.length / 3;
-    console.log(chunkSize);
-
     const imageArrayChunks = makeChunks(images, chunkSize);
 
     useEffect(() => {
         if (images) {
-            // dispatch(fetchImages('portrait'));
             dispatch(fetchImages());
         }
     }, []);
@@ -28,39 +27,21 @@ export function Home() {
                     {imageArrayChunks &&
                         imageArrayChunks[0] &&
                         imageArrayChunks[0].map((image, i) => {
-                            return (
-                                <div className="card mb-5 portfolio-item">
-                                    <div className="card-image">
-                                        <img className="image" src={image.secure_url} alt="" />
-                                    </div>
-                                </div>
-                            );
+                            return <ImageCard image={image} key={i} />;
                         })}
                 </div>
                 <div className="column is-full-mobile">
                     {imageArrayChunks &&
                         imageArrayChunks[1] &&
                         imageArrayChunks[1].map((image, i) => {
-                            return (
-                                <div className="card mb-5 portfolio-item">
-                                    <div className="card-image">
-                                        <img className="image" src={image.secure_url} alt="" />
-                                    </div>
-                                </div>
-                            );
+                            return <ImageCard image={image} key={i} />;
                         })}
                 </div>
                 <div className="column is-full-mobile">
                     {imageArrayChunks &&
                         imageArrayChunks[2] &&
                         imageArrayChunks[2].map((image, i) => {
-                            return (
-                                <div className="card mb-5 portfolio-item">
-                                    <div className="card-image">
-                                        <img className="image" src={image.secure_url} alt="" />
-                                    </div>
-                                </div>
-                            );
+                            return <ImageCard image={image} key={i} />;
                         })}
                 </div>
 
@@ -68,14 +49,4 @@ export function Home() {
             </div>
         </section>
     );
-}
-
-function makeChunks(images: any[], chunkSize: number): any[] {
-    let arr: any[] = [];
-
-    for (let index = 0; index < images.length; index += chunkSize) {
-        arr.push(images.slice(index, index + chunkSize));
-    }
-
-    return arr;
 }

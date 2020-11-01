@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LIST_URL } from './constants';
+import { LIKE_URL, LIST_URL } from './constants';
 import { ImageState } from './models';
 import { RootState } from './store';
 
@@ -25,10 +25,28 @@ export const imageSlice = createSlice({
             state.isLoading = false;
             state.error = payload;
         },
+        likeImageStart: (state: ImageState, { payload }) => {
+            state.isLoading = true;
+        },
+        likeImageSuccess: (state: ImageState, { payload }) => {
+            state.isLoading = false;
+            state.error = '';
+        },
+        likeImageFailure: (state: ImageState, { payload }) => {
+            state.isLoading = false;
+            state.error = payload;
+        },
     },
 });
 
-export const { fetchImagesStart, fetchImagesSuccess, fetchImagesFailure } = imageSlice.actions;
+export const {
+    fetchImagesStart,
+    fetchImagesSuccess,
+    fetchImagesFailure,
+    likeImageStart,
+    likeImageSuccess,
+    likeImageFailure,
+} = imageSlice.actions;
 
 export const selectedImages = (state: RootState) => state.image.images;
 export const imagesAreLoading = (state: RootState) => state.image.isLoading;
@@ -55,6 +73,30 @@ export function fetchImages(tag?: string) {
             }
         } catch (error) {
             dispatch(fetchImagesFailure(error.message));
+        }
+    };
+}
+
+export function toggleLiked(public_id: string, tag: string) {
+    return async (dispatch) => {
+        dispatch(likeImageStart);
+
+        try {
+            const response = await fetch(LIKE_URL, {
+                method: 'PUT',
+                body: JSON.stringify({ public_id, tag }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                dispatch(likeImageSuccess(data));
+            } else {
+                const key = Object.keys(data)[0];
+                const message = data[key] ? data[key][0] : response.statusText;
+                throw Error(message);
+            }
+        } catch (error) {
+            dispatch(likeImageFailure(error.message));
         }
     };
 }

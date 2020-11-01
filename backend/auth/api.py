@@ -1,6 +1,7 @@
 from knox.models import AuthToken
 from rest_framework import generics, permissions
 from rest_framework.response import Response
+from rest_framework.serializers import ValidationError
 
 from auth.serializers import LoginSerializer, RegisterSerializer, UserSerializer
 
@@ -36,9 +37,9 @@ class LoginAPI(generics.GenericAPIView):
                     "token": token,
                 }
             )
-        except Exception as error:
-            print(error)
-            return Response({"message": str(error)}, status=400)
+        except ValidationError as error:
+            print(serializer.errors)
+            return Response(serializer.errors, status=400)
 
 
 class UserAPI(generics.RetrieveAPIView):
