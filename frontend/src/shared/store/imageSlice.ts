@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { LIKE_URL, LIST_URL } from './constants';
-import { ImageState } from './models';
+import { LIKE_URL, LIST_URL } from '../constants';
+import { ImageState } from '../models';
 import { RootState } from './store';
 
 const initialState: ImageState = {

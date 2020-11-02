@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { initialSession, TYPE_ERROR, UPLOAD_APP_KEY } from './constants';
-import { AuthState, Session, UserAuthInput } from './models';
+import { initialSession, TYPE_ERROR, UPLOAD_APP_KEY } from '../constants';
+import { AuthState, Session, UserAuthInput } from '../models';
 import { RootState } from './store';
 
 const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');

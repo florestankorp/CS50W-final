@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchImages, imagesAreLoading, selectedImages } from '../shared/imageSlice';
+import { fetchImages, imagesAreLoading, selectedImages } from '../shared/store/imageSlice';
 import { makeChunks } from '../shared/utils';
 import Spinner from '../spinner.svg';
 import { ImageCard } from './home/ImageCard';
@@ -11,14 +11,14 @@ export function Favs() {
 
     const images = useSelector(selectedImages);
     const favs = images.filter((image) => image.tags[0] === 'fav');
-    const chunkSize = images.length / 3;
+    const chunkSize = images.length / 3 || 1;
     const imageArrayChunks = makeChunks(favs, chunkSize);
 
     useEffect(() => {
         if (images) {
             dispatch(fetchImages('fav'));
         }
-    }, []);
+    });
 
     return (
         <section className="section">

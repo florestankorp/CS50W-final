@@ -2,18 +2,18 @@ import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+import { EMAIL_REGEX, REGISTER_URL } from '../../shared/constants';
+import { UserAuthInput } from '../../shared/models';
 import {
     authCall,
     clearAuthError,
     selectAuthError,
     selectAuthLoadingState,
-    selectAuthLoginState
-} from '../../shared/authSlice';
-import { EMAIL_REGEX, REGISTER_URL } from '../../shared/constants';
-import { UserAuthInput } from '../../shared/models';
+    selectAuthLoginState,
+} from '../../shared/store/authSlice';
 import Spinner from '../../spinner.svg';
 import './Auth.scss';
-  
+
 export function Register() {
     const { register, handleSubmit, errors, watch, reset } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
     const passwordRef = useRef({});
@@ -27,7 +27,7 @@ export function Register() {
         if (isAuthenticated) {
             history.push('/');
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, history]);
 
     passwordRef.current = watch('password', '');
 

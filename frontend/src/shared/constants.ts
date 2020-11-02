@@ -7,9 +7,11 @@ export const initialSession: Session = {
     auth: { isAuthenticated: false },
 };
 
-export const REGISTER_URL = 'http://localhost:8000/api/auth/register';
-export const LOGIN_URL = 'http://localhost:8000/api/auth/login';
-export const UPLOAD_URL = 'http://localhost:8000/upload';
-export const LIST_URL = 'http://localhost:8000/list';
-export const LIKE_URL = 'http://localhost:8000/like';
+const API_BASE_URL = 'http://localhost:8001';
+
+export const REGISTER_URL = `${API_BASE_URL}/api/auth/register`;
+export const LOGIN_URL = `${API_BASE_URL}/api/auth/login`;
+export const UPLOAD_URL = `${API_BASE_URL}/upload`;
+export const LIST_URL = `${API_BASE_URL}/list`;
+export const LIKE_URL = `${API_BASE_URL}/like`;
 export const TYPE_ERROR = 'Failed to fetch';

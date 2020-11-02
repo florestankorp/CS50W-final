@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 import Spinner from '../spinner.svg';
-import { selectAuthLoadingState, selectAuthLoginState } from './authSlice';
 import { PrivateRouteProps } from './models';
+import { selectAuthLoadingState, selectAuthLoginState } from './store/authSlice';
 
 export function PrivateRoute(props: PrivateRouteProps): ReactElement {
     const { component: Component, ...rest } = props;

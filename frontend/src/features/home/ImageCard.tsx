@@ -3,7 +3,7 @@ import { faHeart as heartSolid } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleLiked } from '../../shared/imageSlice';
+import { toggleLiked } from '../../shared/store/imageSlice';
 
 export function ImageCard({ image }: any) {
     const [liked, setLiked] = useState(image.tags.includes('fav'));

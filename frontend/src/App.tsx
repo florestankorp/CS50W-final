@@ -6,10 +6,10 @@ import { Login } from './features/auth/Login';
 import { Register } from './features/auth/Register';
 import { Favs } from './features/Favs';
 import { Home } from './features/home/Home';
-import { Navbar } from './features/Navbar';
+import { Navbar } from './features/navbar/Navbar';
 import { Uploader } from './features/uploader/Uploader';
-import { authInit } from './shared/authSlice';
 import { PrivateRoute } from './shared/PrivateRoute';
+import { authInit } from './shared/store/authSlice';
 
 function App() {
     const dispatch = useDispatch();

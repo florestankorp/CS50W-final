@@ -2,15 +2,15 @@ import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+import { EMAIL_REGEX, LOGIN_URL } from '../../shared/constants';
+import { UserAuthInput } from '../../shared/models';
 import {
     authCall,
     clearAuthError,
     selectAuthError,
     selectAuthLoadingState,
     selectAuthLoginState,
-} from '../../shared/authSlice';
-import { EMAIL_REGEX, LOGIN_URL } from '../../shared/constants';
-import { UserAuthInput } from '../../shared/models';
+} from '../../shared/store/authSlice';
 import Spinner from '../../spinner.svg';
 
 export function Login() {
@@ -26,7 +26,7 @@ export function Login() {
         if (isAuthenticated) {
             history.push('/');
         }
-    }, [isAuthenticated]);
+    }, [isAuthenticated, history]);
 
     const onSubmit: any = (data) => {
         dispatch(clearAuthError());
