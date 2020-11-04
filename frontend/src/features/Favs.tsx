@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { TAGS } from '../shared/constants';
 import { fetchImages, imagesAreLoading, selectedImages } from '../shared/store/imageSlice';
 import { makeChunks } from '../shared/utils';
 import Spinner from '../spinner.svg';
@@ -10,15 +11,15 @@ export function Favs() {
     const isLoading = useSelector(imagesAreLoading);
 
     const images = useSelector(selectedImages);
-    const favs = images.filter((image) => image.tags[0] === 'fav');
+    const favs = images.filter((image) => image.tags.includes(TAGS.FAV));
     const chunkSize = images.length / 3 || 1;
     const imageArrayChunks = makeChunks(favs, chunkSize);
 
     useEffect(() => {
         if (images) {
-            dispatch(fetchImages('fav'));
+            dispatch(fetchImages(TAGS.FAV));
         }
-    });
+    }, []);
 
     return (
         <section className="section">

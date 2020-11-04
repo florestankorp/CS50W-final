@@ -22,7 +22,7 @@ class ListImagesAPIView(APIView):
         try:
             tag = request.query_params.get("tag")
             if tag is None:
-                response = cloudinary.api.resources(max_results=50, tags=True)
+                response = cloudinary.api.resources(max_results=10, tags=True)
             else:
                 response = cloudinary.api.resources_by_tag(tag, tags=True)
             return Response({"status": "success", "data": response}, status=200)
@@ -44,7 +44,7 @@ class LikeImageAPIView(APIView):
                 response = cloudinary.uploader.remove_tag(
                     FAV, public_ids=public_id
                 )
-                print("Removed tag")
+                print("Removed tag", FAV, "from:", public_id)
                 return Response(
                     {"status": "success", "data": response}, status=200
                 )
@@ -53,7 +53,7 @@ class LikeImageAPIView(APIView):
                     FAV, public_ids=public_id
                 )
 
-                print("Added tag")
+                print("Added tag", FAV, "to:", public_id)
                 return Response(
                     {"status": "success", "data": response}, status=200
                 )

@@ -18,7 +18,7 @@ export function Home() {
         if (images) {
             dispatch(fetchImages());
         }
-    });
+    }, []);
 
     return (
         <section className="section">

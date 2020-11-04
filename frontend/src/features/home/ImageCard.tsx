@@ -3,10 +3,11 @@ import { faHeart as heartSolid } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { TAGS } from '../../shared/constants';
 import { toggleLiked } from '../../shared/store/imageSlice';
 
 export function ImageCard({ image }: any) {
-    const [liked, setLiked] = useState(image.tags.includes('fav'));
+    const [liked, setLiked] = useState(image.tags.includes(TAGS.FAV));
 
     const dispatch = useDispatch();
     const handleClick = (public_id: string, tag: string) => {
@@ -19,7 +20,7 @@ export function ImageCard({ image }: any) {
             <div className="card-image">
                 <img className="image" src={image.secure_url} alt="" />
             </div>
-            <span onClick={() => handleClick(image.public_id, 'fav')}>
+            <span onClick={() => handleClick(image.public_id, TAGS.FAV)}>
                 {<FontAwesomeIcon icon={liked ? heartSolid : heartOutline} size="lg" color="black" />}
             </span>
         </div>

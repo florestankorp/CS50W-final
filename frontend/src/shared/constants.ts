@@ -6,6 +6,9 @@ export const UPLOAD_APP_KEY = 'uploadApp';
 export const initialSession: Session = {
     auth: { isAuthenticated: false },
 };
+export const TAGS = {
+    FAV: 'fav',
+};
 
 const API_BASE_URL = 'http://localhost:8001';
 
