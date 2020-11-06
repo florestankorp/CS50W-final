@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { ReactElement, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -14,7 +14,7 @@ import {
 import Spinner from '../../spinner.svg';
 import './Auth.scss';
 
-export function Register() {
+export function Register(): ReactElement {
     const { register, handleSubmit, errors, watch, reset } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
     const passwordRef = useRef({});
     const dispatch = useDispatch();
@@ -31,7 +31,7 @@ export function Register() {
 
     passwordRef.current = watch('password', '');
 
-    const onSubmit: any = (data) => {
+    const onSubmit = (data) => {
         dispatch(clearAuthError());
         dispatch(authCall(data, REGISTER_URL));
         reset();

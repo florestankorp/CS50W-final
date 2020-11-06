@@ -1,12 +1,12 @@
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { UPLOAD_URL } from '../../shared/constants';
 import { Base64EncodedImage } from '../../shared/models';
 import Spinner from '../../spinner.svg';
 import './Uploader.scss';
 
-export function Uploader() {
+export function Uploader(): ReactElement {
     const newEmptyFile = new File([''], 'default');
 
     const [previewSource, setPreviewSource] = useState<Base64EncodedImage>('');
@@ -19,7 +19,7 @@ export function Uploader() {
     const [successMessage, setSuccessMessage] = useState('');
 
     const handleValueInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file: File = event.target.files![0];
+        const file: File = (event.target.files && event.target.files[0]) || newEmptyFile;
         const path = event.target.value;
 
         previewFile(file);

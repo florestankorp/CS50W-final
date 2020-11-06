@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LIKE_URL, LIST_URL } from '../constants';
-import { ImageState } from '../models';
+import { Image, ImageState } from '../models';
 import { RootState } from './store';
 
 const initialState: ImageState = {
@@ -13,7 +13,7 @@ export const imageSlice = createSlice({
     name: 'image',
     initialState,
     reducers: {
-        fetchImagesStart: (state: ImageState, { payload }) => {
+        fetchImagesStart: (state: ImageState) => {
             state.isLoading = true;
         },
         fetchImagesSuccess: (state: ImageState, { payload }) => {
@@ -25,10 +25,10 @@ export const imageSlice = createSlice({
             state.isLoading = false;
             state.error = payload;
         },
-        likeImageStart: (state: ImageState, { payload }) => {
+        likeImageStart: (state: ImageState) => {
             state.isLoading = true;
         },
-        likeImageSuccess: (state: ImageState, { payload }) => {
+        likeImageSuccess: (state: ImageState) => {
             state.isLoading = false;
             state.error = '';
         },
@@ -48,12 +48,13 @@ export const {
     likeImageFailure,
 } = imageSlice.actions;
 
-export const selectedImages = (state: RootState) => state.image.images;
-export const imagesAreLoading = (state: RootState) => state.image.isLoading;
+export const selectedImages = (state: RootState): Image[] => state.image.images;
+export const imagesAreLoading = (state: RootState): boolean => state.image.isLoading;
 
 export default imageSlice.reducer;
 
 // no tag fetches all images
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function fetchImages(tag?: string) {
     const encodedValue = tag ? encodeURIComponent(tag) : '';
     const param = encodedValue ? `?tag=${encodedValue}` : '';
@@ -78,6 +79,7 @@ export function fetchImages(tag?: string) {
 }
 
 export function toggleLiked(public_id: string, tag: string) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     return async (dispatch) => {
         dispatch(likeImageStart);
 
@@ -89,7 +91,7 @@ export function toggleLiked(public_id: string, tag: string) {
             });
             const data = await response.json();
             if (response.ok) {
-                dispatch(likeImageSuccess(data));
+                dispatch(likeImageSuccess);
             } else {
                 const key = Object.keys(data)[0];
                 const message = data[key] ? data[key][0] : response.statusText;

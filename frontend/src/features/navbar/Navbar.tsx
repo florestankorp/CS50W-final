@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { logOut, selectAuthLoginState } from '../../shared/store/authSlice';
 import './Navbar.scss';
-export function Navbar() {
+export function Navbar(): ReactElement {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(selectAuthLoginState);
 
-    const handleLogOut = (e) => {
+    const handleLogOut = () => {
         dispatch(logOut());
     };
 

@@ -1,12 +1,11 @@
 import { faHeart as heartOutline } from '@fortawesome/free-regular-svg-icons';
 import { faHeart as heartSolid } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { TAGS } from '../../shared/constants';
-import { toggleLiked } from '../../shared/store/imageSlice';
+import { ImageProp, TAGS, toggleLiked } from '../../shared/index';
 
-export function ImageCard({ image }: any) {
+export function ImageCard({ image }: ImageProp): ReactElement {
     const [liked, setLiked] = useState(image.tags.includes(TAGS.FAV));
 
     const dispatch = useDispatch();

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -13,7 +13,7 @@ import {
 } from '../../shared/store/authSlice';
 import Spinner from '../../spinner.svg';
 
-export function Login() {
+export function Login(): ReactElement {
     const { register, handleSubmit, errors, reset } = useForm<UserAuthInput>({ reValidateMode: 'onSubmit' });
 
     const dispatch = useDispatch();
@@ -28,7 +28,7 @@ export function Login() {
         }
     }, [isAuthenticated, history]);
 
-    const onSubmit: any = (data) => {
+    const onSubmit = (data) => {
         dispatch(clearAuthError());
         dispatch(authCall(data, LOGIN_URL));
         reset();

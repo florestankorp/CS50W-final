@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchImages, imagesAreLoading, selectedImages } from '../../shared/store/imageSlice';
 import { makeChunks } from '../../shared/utils';
@@ -6,7 +6,7 @@ import Spinner from '../../spinner.svg';
 import './Home.scss';
 import { ImageCard } from './ImageCard';
 
-export function Home() {
+export function Home(): ReactElement {
     const dispatch = useDispatch();
     const isLoading = useSelector(imagesAreLoading);
 

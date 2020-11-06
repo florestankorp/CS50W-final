@@ -23,7 +23,7 @@ export const authSlice = createSlice({
         },
         authInit: (state: AuthState) => {
             const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
-            if (!!Object.keys(_sessionStorage).length) {
+            if (Object.keys(_sessionStorage).length) {
                 state.token = _sessionStorage.auth.token || '';
                 state.isAuthenticated = !!_sessionStorage.auth.isAuthenticated;
                 state.username = _sessionStorage.auth.username || '';
@@ -43,7 +43,7 @@ export const authSlice = createSlice({
                 token,
                 user: { username },
             } = payload;
-            let _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
+            const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');
 
             state.isLoading = false;
             state.isAuthenticated = true;
@@ -70,18 +70,19 @@ export const authSlice = createSlice({
 
 export const { authInit, authStart, authFailure, authSuccess, clearAuthError, logOut } = authSlice.actions;
 
-export const selectAuthLoginState = (state: RootState) => state.auth.isAuthenticated;
-export const selectAuthLoadingState = (state: RootState) => state.auth.isLoading;
-export const selectAuthToken = (state: RootState) => state.auth.token;
-export const selectAuthUsername = (state: RootState) => state.auth.username;
-export const selectAuthError = (state: RootState) => state.auth.error;
+export const selectAuthLoginState = (state: RootState): boolean => state.auth.isAuthenticated;
+export const selectAuthLoadingState = (state: RootState): boolean => state.auth.isLoading;
+export const selectAuthToken = (state: RootState): string => state.auth.token;
+export const selectAuthUsername = (state: RootState): string => state.auth.username;
+export const selectAuthError = (state: RootState): string => state.auth.error;
 
 export default authSlice.reducer;
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function authCall(data: UserAuthInput, url: string) {
     const { username, password } = data;
 
-    return async (dispatch) => {
+    return async (dispatch): Promise<void> => {
         dispatch(authStart());
         try {
             const response = await fetch(url, {

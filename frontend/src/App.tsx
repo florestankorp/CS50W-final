@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.scss';
@@ -11,7 +11,7 @@ import { Uploader } from './features/uploader/Uploader';
 import { PrivateRoute } from './shared/PrivateRoute';
 import { authInit } from './shared/store/authSlice';
 
-function App() {
+function App(): ReactElement {
     const dispatch = useDispatch();
     document.body.classList.add('has-navbar-fixed-top');
     dispatch(authInit());

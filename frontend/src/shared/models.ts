@@ -28,16 +28,29 @@ export interface ImageState {
     error: string;
 }
 
-export interface Image {
-    asset_id: string;
-    public_id: string;
-    secure_url: string;
-    created_at: string;
-    tags: string[];
-}
-
 export interface UserAuthInput {
     username: string;
     password: string;
     passwordConf: string;
+}
+
+export interface Image {
+    asset_id: string;
+    public_id: string;
+    format: string;
+    version: number;
+    resource_type: string;
+    type: string;
+    created_at: string;
+    bytes: number;
+    width: number;
+    height: number;
+    url: string;
+    secure_url: string;
+    tags: string[];
+}
+
+export interface ImageProp {
+    image: Image;
+    key: number;
 }
