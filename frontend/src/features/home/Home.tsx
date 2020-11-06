@@ -15,7 +15,7 @@ export function Home(): ReactElement {
     const imageArrayChunks = makeChunks(images, chunkSize);
 
     useEffect(() => {
-        if (images) {
+        if (!images.length) {
             dispatch(fetchImages());
         }
     }, []);

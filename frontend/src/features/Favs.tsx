@@ -1,8 +1,6 @@
 import React, { ReactElement, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { TAGS } from '../shared/constants';
-import { fetchImages, imagesAreLoading, selectedImages } from '../shared/store/imageSlice';
-import { makeChunks } from '../shared/utils';
+import { fetchImages, imagesAreLoading, makeChunks, selectedImages, TAGS } from '../shared/index';
 import Spinner from '../spinner.svg';
 import { ImageCard } from './home/ImageCard';
 
@@ -12,11 +10,11 @@ export function Favs(): ReactElement {
 
     const images = useSelector(selectedImages);
     const favs = images.filter((image) => image.tags.includes(TAGS.FAV));
-    const chunkSize = images.length / 3 || 1;
+    const chunkSize = favs.length / 3 || 1;
     const imageArrayChunks = makeChunks(favs, chunkSize);
 
     useEffect(() => {
-        if (images) {
+        if (!favs.length) {
             dispatch(fetchImages(TAGS.FAV));
         }
     }, []);
@@ -24,6 +22,7 @@ export function Favs(): ReactElement {
     return (
         <section className="section">
             <div className="columns is-centered is-tablet is-multiline">
+                {!favs.length && <h1 className="title has-text-centered">No favs yet...</h1>}
                 <div className="column is-full-mobile">
                     {imageArrayChunks &&
                         imageArrayChunks[0] &&
