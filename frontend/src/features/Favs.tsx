@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchImages, imagesAreLoading, makeChunks, selectedImages, TAGS } from '../shared/index';
+import { fetchImages, fetchingImagesPending, makeChunks, selectedImages, TAGS } from '../shared/index';
 import Spinner from '../spinner.svg';
 import { ImageCard } from './home/ImageCard';
 
 export function Favs(): ReactElement {
     const dispatch = useDispatch();
-    const isLoading = useSelector(imagesAreLoading);
+    const imagesLoadingState = useSelector(fetchingImagesPending);
 
     const images = useSelector(selectedImages);
     const favs = images.filter((image) => image.tags.includes(TAGS.FAV));
@@ -44,7 +44,7 @@ export function Favs(): ReactElement {
                             return <ImageCard image={image} key={i} />;
                         })}
                 </div>
-                {isLoading && <img src={Spinner} alt="Loading Spinner" />}
+                {imagesLoadingState && <img src={Spinner} alt="Loading Spinner" />}
             </div>
         </section>
     );

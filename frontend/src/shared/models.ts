@@ -24,8 +24,16 @@ export interface AuthState {
 
 export interface ImageState {
     images: Image[];
-    isLoading: boolean;
-    error: string;
+    fetchingImagesPending: boolean;
+    likeImagePending: boolean;
+    deleteImagePending: boolean;
+    errors: ImageErrors;
+}
+
+export interface ImageErrors {
+    fetch: string[];
+    like: string[];
+    delete: string[];
 }
 
 export interface UserAuthInput {

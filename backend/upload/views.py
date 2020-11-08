@@ -22,9 +22,21 @@ class ListImagesAPIView(APIView):
         try:
             tag = request.query_params.get("tag")
             if tag is None:
-                response = cloudinary.api.resources(max_results=10, tags=True)
+                response = cloudinary.api.resources(max_results=30, tags=True)
             else:
                 response = cloudinary.api.resources_by_tag(tag, tags=True)
+            return Response({"status": "success", "data": response}, status=200)
+        except Exception as error:
+            print(error)
+            return Response({"message": str(error)}, status=400)
+
+
+class DeleteImageAPIView(APIView):
+    @staticmethod
+    def delete(request):
+        try:
+            public_id = request.data.get("public_id")
+            response = cloudinary.uploader.destroy(public_id=public_id)
             return Response({"status": "success", "data": response}, status=200)
         except Exception as error:
             print(error)

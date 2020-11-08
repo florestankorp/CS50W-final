@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchImages, imagesAreLoading, selectedImages } from '../../shared/store/imageSlice';
+import { fetchImages, fetchingImagesPending, selectedImages } from '../../shared/store/imageSlice';
 import { makeChunks } from '../../shared/utils';
 import Spinner from '../../spinner.svg';
 import './Home.scss';
@@ -8,7 +8,7 @@ import { ImageCard } from './ImageCard';
 
 export function Home(): ReactElement {
     const dispatch = useDispatch();
-    const isLoading = useSelector(imagesAreLoading);
+    const isLoading = useSelector(fetchingImagesPending);
 
     const images = useSelector(selectedImages);
     const chunkSize = images.length / 3 || 1;
@@ -23,6 +23,7 @@ export function Home(): ReactElement {
     return (
         <section className="section">
             <div className="columns is-centered is-tablet is-multiline">
+                {isLoading && <img className="title has-text-centered" src={Spinner} alt="Loading Spinner" />}
                 <div className="column is-full-mobile">
                     {imageArrayChunks &&
                         imageArrayChunks[0] &&
@@ -44,7 +45,6 @@ export function Home(): ReactElement {
                             return <ImageCard image={image} key={i} />;
                         })}
                 </div>
-                {isLoading && <img src={Spinner} alt="Loading Spinner" />}
             </div>
         </section>
     );

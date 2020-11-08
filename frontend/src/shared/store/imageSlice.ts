@@ -1,13 +1,19 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unused-expressions */
 import { createSlice } from '@reduxjs/toolkit';
-import { LIKE_URL, LIST_URL } from '../constants';
+import { DELETE_URL, LIKE_URL, LIST_URL } from '../constants';
 import { Image, ImageState } from '../models';
 import { RootState } from './store';
 
 const initialState: ImageState = {
     images: [],
-    isLoading: false,
-    error: '',
+    fetchingImagesPending: false,
+    likeImagePending: false,
+    deleteImagePending: false,
+    errors: {
+        fetch: [],
+        like: [],
+        delete: [],
+    },
 };
 
 export const imageSlice = createSlice({
@@ -15,36 +21,51 @@ export const imageSlice = createSlice({
     initialState,
     reducers: {
         fetchImagesStart: (state: ImageState) => {
-            state.isLoading = true;
+            state.fetchingImagesPending = true;
         },
         fetchImagesSuccess: (state: ImageState, { payload }) => {
-            state.isLoading = false;
-            state.error = '';
+            state.fetchingImagesPending = false;
+            state.errors.fetch = [];
             state.images = payload.data.resources;
         },
         fetchImagesFailure: (state: ImageState, { payload }) => {
-            state.isLoading = false;
-            state.error = payload;
+            state.fetchingImagesPending = false;
+            state.errors.fetch.push(payload);
         },
         likeImageStart: (state: ImageState) => {
-            state.isLoading = true;
+            state.likeImagePending = true;
         },
         likeImageSuccess: (state: ImageState) => {
-            state.isLoading = false;
-            state.error = '';
-        },
-        likeImageFailure: (state: ImageState, { payload }) => {
-            state.isLoading = false;
-            state.error = payload;
+            state.likeImagePending = false;
+            state.errors.like = [];
         },
         toggleLikedAction: (state: ImageState, { payload }) => {
-            state.isLoading = false;
+            state.likeImagePending = false;
 
             const { public_id, tag } = payload;
             const likedImage = state.images.find((image) => image.public_id === public_id);
             const index = likedImage?.tags.indexOf(tag) || 0;
 
             index > -1 ? likedImage?.tags.splice(index, 1) : likedImage?.tags.push(tag);
+        },
+        likeImageFailure: (state: ImageState, { payload }) => {
+            state.likeImagePending = false;
+            state.errors.like.push(payload);
+        },
+        deleteImageStart: (state: ImageState) => {
+            state.deleteImagePending = true;
+        },
+        deleteImageSuccess: (state: ImageState, { payload }) => {
+            state.deleteImagePending = false;
+
+            const deletedImage = state.images.filter((image) => image.public_id === payload)[0];
+            const index = state.images.indexOf(deletedImage!);
+
+            state.images.splice(index, 1);
+        },
+        deleteImageFailure: (state: ImageState, { payload }) => {
+            state.deleteImagePending = false;
+            state.errors.delete.push(payload);
         },
     },
 });
@@ -57,10 +78,15 @@ export const {
     likeImageSuccess,
     likeImageFailure,
     toggleLikedAction,
+    deleteImageStart,
+    deleteImageSuccess,
+    deleteImageFailure,
 } = imageSlice.actions;
 
 export const selectedImages = (state: RootState): Image[] => state.image.images;
-export const imagesAreLoading = (state: RootState): boolean => state.image.isLoading;
+export const fetchingImagesPending = (state: RootState): boolean => state.image.fetchingImagesPending;
+export const likeImagePending = (state: RootState): boolean => state.image.likeImagePending;
+export const deleteImagePending = (state: RootState): boolean => state.image.deleteImagePending;
 
 export default imageSlice.reducer;
 
@@ -71,7 +97,7 @@ export function fetchImages(tag?: string) {
     const param = encodedValue ? `?tag=${encodedValue}` : '';
 
     return async (dispatch) => {
-        dispatch(fetchImagesStart);
+        dispatch(fetchImagesStart());
 
         try {
             const response = await fetch(`${LIST_URL}${param}`);
@@ -92,7 +118,7 @@ export function fetchImages(tag?: string) {
 export function toggleLiked(public_id: string, tag: string) {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     return async (dispatch) => {
-        dispatch(likeImageStart);
+        dispatch(likeImageStart());
 
         try {
             const response = await fetch(LIKE_URL, {
@@ -102,7 +128,7 @@ export function toggleLiked(public_id: string, tag: string) {
             });
             const data = await response.json();
             if (response.ok) {
-                dispatch(likeImageSuccess);
+                dispatch(likeImageSuccess());
                 dispatch(toggleLikedAction({ public_id, tag }));
             } else {
                 const key = Object.keys(data)[0];
@@ -111,6 +137,31 @@ export function toggleLiked(public_id: string, tag: string) {
             }
         } catch (error) {
             dispatch(likeImageFailure(error.message));
+        }
+    };
+}
+
+export function deleteImageCall(public_id: string) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    return async (dispatch) => {
+        dispatch(deleteImageStart());
+
+        try {
+            const response = await fetch(DELETE_URL, {
+                method: 'DELETE',
+                body: JSON.stringify({ public_id }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                dispatch(deleteImageSuccess(public_id));
+            } else {
+                const key = Object.keys(data)[0];
+                const message = data[key] ? data[key][0] : response.statusText;
+                throw Error(message);
+            }
+        } catch (error) {
+            dispatch(deleteImageFailure(error.message));
         }
     };
 }
