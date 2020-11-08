@@ -18,7 +18,7 @@ export function Home(): ReactElement {
         if (!images.length) {
             dispatch(fetchImages());
         }
-    }, []);
+    });
 
     return (
         <section className="section">
@@ -44,7 +44,6 @@ export function Home(): ReactElement {
                             return <ImageCard image={image} key={i} />;
                         })}
                 </div>
-
                 {isLoading && <img src={Spinner} alt="Loading Spinner" />}
             </div>
         </section>

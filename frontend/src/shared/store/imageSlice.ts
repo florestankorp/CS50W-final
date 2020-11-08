@@ -38,6 +38,8 @@ export const imageSlice = createSlice({
             state.error = payload;
         },
         toggleLikedAction: (state: ImageState, { payload }) => {
+            state.isLoading = false;
+
             const { public_id, tag } = payload;
             const likedImage = state.images.find((image) => image.public_id === public_id);
             const index = likedImage?.tags.indexOf(tag) || 0;

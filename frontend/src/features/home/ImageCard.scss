@@ -1,0 +1,26 @@
+.card-button-container {
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 14px;
+    margin-right: 7px;
+
+    .spinner {
+        width: 20px;
+    }
+    .rating-container {
+        width: 25%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .numberCircle {
+            display: inline-block;
+            border-radius: 50%;
+            width: 12px;
+            height: 12px;
+            border: 2px solid gray;
+            text-align: center;
+        }
+    }
+}
