@@ -19,8 +19,8 @@ import Spinner from '../../spinner.svg';
 import './ImageCard.scss';
 export function ImageCard({ image }: ImageProp): ReactElement {
     const [liked, setLiked] = useState(image.tags.includes(TAGS.FAV));
-    const imageLikeState = useSelector(likeImagePending);
-    const imageDeleteState = useSelector(deleteImagePending);
+    const imageLikeState = useSelector(likeImagePending(image.public_id));
+    const imageDeleteState = useSelector(deleteImagePending(image.public_id));
 
     const dispatch = useDispatch();
     const like = (public_id: string, tag: string) => {

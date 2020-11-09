@@ -7,8 +7,8 @@ import { RootState } from './store';
 const initialState: ImageState = {
     images: [],
     fetchingImagesPending: false,
-    likeImagePending: false,
-    deleteImagePending: false,
+    likeImagePendingId: '',
+    deleteImagePendingId: '',
     errors: {
         fetch: [],
         like: [],
@@ -32,15 +32,15 @@ export const imageSlice = createSlice({
             state.fetchingImagesPending = false;
             state.errors.fetch.push(payload);
         },
-        likeImageStart: (state: ImageState) => {
-            state.likeImagePending = true;
+        likeImageStart: (state: ImageState, { payload }) => {
+            state.likeImagePendingId = payload;
         },
         likeImageSuccess: (state: ImageState) => {
-            state.likeImagePending = false;
+            state.likeImagePendingId = '';
             state.errors.like = [];
         },
         toggleLikedAction: (state: ImageState, { payload }) => {
-            state.likeImagePending = false;
+            state.likeImagePendingId = '';
 
             const { public_id, tag } = payload;
             const likedImage = state.images.find((image) => image.public_id === public_id);
@@ -49,14 +49,14 @@ export const imageSlice = createSlice({
             index > -1 ? likedImage?.tags.splice(index, 1) : likedImage?.tags.push(tag);
         },
         likeImageFailure: (state: ImageState, { payload }) => {
-            state.likeImagePending = false;
+            state.likeImagePendingId = '';
             state.errors.like.push(payload);
         },
-        deleteImageStart: (state: ImageState) => {
-            state.deleteImagePending = true;
+        deleteImageStart: (state: ImageState, { payload }) => {
+            state.deleteImagePendingId = payload;
         },
         deleteImageSuccess: (state: ImageState, { payload }) => {
-            state.deleteImagePending = false;
+            state.deleteImagePendingId = '';
 
             const deletedImage = state.images.filter((image) => image.public_id === payload)[0];
             const index = state.images.indexOf(deletedImage!);
@@ -64,7 +64,7 @@ export const imageSlice = createSlice({
             state.images.splice(index, 1);
         },
         deleteImageFailure: (state: ImageState, { payload }) => {
-            state.deleteImagePending = false;
+            state.deleteImagePendingId = '';
             state.errors.delete.push(payload);
         },
     },
@@ -85,8 +85,9 @@ export const {
 
 export const selectedImages = (state: RootState): Image[] => state.image.images;
 export const fetchingImagesPending = (state: RootState): boolean => state.image.fetchingImagesPending;
-export const likeImagePending = (state: RootState): boolean => state.image.likeImagePending;
-export const deleteImagePending = (state: RootState): boolean => state.image.deleteImagePending;
+export const likeImagePending = (id: string) => (state: RootState): boolean => state.image.likeImagePendingId === id;
+export const deleteImagePending = (id: string) => (state: RootState): boolean =>
+    state.image.deleteImagePendingId === id;
 
 export default imageSlice.reducer;
 
@@ -118,7 +119,7 @@ export function fetchImages(tag?: string) {
 export function toggleLiked(public_id: string, tag: string) {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     return async (dispatch) => {
-        dispatch(likeImageStart());
+        dispatch(likeImageStart(public_id));
 
         try {
             const response = await fetch(LIKE_URL, {
@@ -144,7 +145,7 @@ export function toggleLiked(public_id: string, tag: string) {
 export function deleteImageCall(public_id: string) {
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     return async (dispatch) => {
-        dispatch(deleteImageStart());
+        dispatch(deleteImageStart(public_id));
 
         try {
             const response = await fetch(DELETE_URL, {

@@ -25,8 +25,8 @@ export interface AuthState {
 export interface ImageState {
     images: Image[];
     fetchingImagesPending: boolean;
-    likeImagePending: boolean;
-    deleteImagePending: boolean;
+    likeImagePendingId: string;
+    deleteImagePendingId: string;
     errors: ImageErrors;
 }
 
