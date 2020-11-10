@@ -1,8 +1,7 @@
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactElement, useState } from 'react';
-import { UPLOAD_URL } from '../../shared/constants';
-import { Base64EncodedImage } from '../../shared/models';
+import { Base64EncodedImage, UPLOAD_URL } from '../../shared';
 import Spinner from '../../spinner.svg';
 import './Uploader.scss';
 

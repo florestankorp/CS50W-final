@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { logOut, selectAuthLoginState } from '../../shared/store/authSlice';
+import { logOut, selectAuthLoginState } from '../../shared';
 import './Navbar.scss';
 export function Navbar(): ReactElement {
     const dispatch = useDispatch();

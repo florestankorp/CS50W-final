@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchImages, fetchingImagesPending, makeChunks, selectedImages, TAGS } from '../shared/index';
-import Spinner from '../spinner.svg';
-import { ImageCard } from './home/ImageCard';
+import { fetchImages, fetchingImagesPending, makeChunks, selectedImages, TAGS } from '../../shared';
+import Spinner from '../../spinner.svg';
+import { ImageCard } from '../image-card/ImageCard';
 
 export function Favs(): ReactElement {
     const dispatch = useDispatch();

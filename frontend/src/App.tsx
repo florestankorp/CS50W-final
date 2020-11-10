@@ -2,14 +2,8 @@ import React, { ReactElement } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import './App.scss';
-import { Login } from './features/auth/Login';
-import { Register } from './features/auth/Register';
-import { Favs } from './features/Favs';
-import { Home } from './features/home/Home';
-import { Navbar } from './features/navbar/Navbar';
-import { Uploader } from './features/uploader/Uploader';
-import { PrivateRoute } from './shared/PrivateRoute';
-import { authInit } from './shared/store/authSlice';
+import { Favs, Home, Login, Navbar, Register, Uploader } from './features';
+import { authInit, PrivateRoute } from './shared';
 
 function App(): ReactElement {
     const dispatch = useDispatch();

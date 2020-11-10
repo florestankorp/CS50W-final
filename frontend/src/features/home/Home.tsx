@@ -1,10 +1,9 @@
 import React, { ReactElement, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchImages, fetchingImagesPending, selectedImages } from '../../shared/store/imageSlice';
-import { makeChunks } from '../../shared/utils';
+import { fetchImages, fetchingImagesPending, makeChunks, selectedImages } from '../../shared';
 import Spinner from '../../spinner.svg';
+import { ImageCard } from '../image-card/ImageCard';
 import './Home.scss';
-import { ImageCard } from './ImageCard';
 
 export function Home(): ReactElement {
     const dispatch = useDispatch();

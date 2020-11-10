@@ -7,14 +7,7 @@ import { faThumbsUp as heartSolid } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { ReactElement, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-    deleteImageCall,
-    deleteImagePending,
-    ImageProp,
-    likeImagePending,
-    TAGS,
-    toggleLiked,
-} from '../../shared/index';
+import { deleteImageCall, deleteImagePending, ImageProp, likeImagePending, TAGS, toggleLiked } from '../../shared';
 import Spinner from '../../spinner.svg';
 import './ImageCard.scss';
 export function ImageCard({ image }: ImageProp): ReactElement {

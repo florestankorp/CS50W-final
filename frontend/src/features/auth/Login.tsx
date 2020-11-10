@@ -2,15 +2,16 @@ import React, { ReactElement, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { EMAIL_REGEX, LOGIN_URL } from '../../shared/constants';
-import { UserAuthInput } from '../../shared/models';
 import {
     authCall,
     clearAuthError,
+    EMAIL_REGEX,
+    LOGIN_URL,
     selectAuthError,
     selectAuthLoadingState,
     selectAuthLoginState,
-} from '../../shared/store/authSlice';
+    UserAuthInput,
+} from '../../shared';
 import Spinner from '../../spinner.svg';
 
 export function Login(): ReactElement {
