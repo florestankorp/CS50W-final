@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-unused-expressions */
 import { createSlice } from '@reduxjs/toolkit';
-import { DELETE_URL, LIKE_URL, LIST_URL } from '../constants';
+import { DELETE_URL, LIST_URL, TAG_URL } from '../constants';
 import { Image, ImageState } from '../models';
 import { RootState } from './store';
 
@@ -9,6 +9,7 @@ const initialState: ImageState = {
     fetchingImagesPending: false,
     likeImagePendingId: '',
     deleteImagePendingId: '',
+    rateImagePendingId: '',
     errors: {
         fetch: [],
         like: [],
@@ -86,6 +87,7 @@ export const {
 export const selectedImages = (state: RootState): Image[] => state.image.images;
 export const fetchingImagesPending = (state: RootState): boolean => state.image.fetchingImagesPending;
 export const likeImagePending = (id: string) => (state: RootState): boolean => state.image.likeImagePendingId === id;
+export const rateImagePending = (id: string) => (state: RootState): boolean => state.image.rateImagePendingId === id;
 export const deleteImagePending = (id: string) => (state: RootState): boolean =>
     state.image.deleteImagePendingId === id;
 
@@ -122,7 +124,33 @@ export function toggleLiked(public_id: string, tag: string) {
         dispatch(likeImageStart(public_id));
 
         try {
-            const response = await fetch(LIKE_URL, {
+            const response = await fetch(TAG_URL, {
+                method: 'PUT',
+                body: JSON.stringify({ public_id, tag }),
+                headers: { 'Content-Type': 'application/json' },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                dispatch(likeImageSuccess());
+                dispatch(toggleLikedAction({ public_id, tag }));
+            } else {
+                const key = Object.keys(data)[0];
+                const message = data[key] ? data[key][0] : response.statusText;
+                throw Error(message);
+            }
+        } catch (error) {
+            dispatch(likeImageFailure(error.message));
+        }
+    };
+}
+
+export function addTag(public_id: string, tag: string) {
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    return async (dispatch) => {
+        dispatch(likeImageStart(public_id));
+
+        try {
+            const response = await fetch(TAG_URL, {
                 method: 'PUT',
                 body: JSON.stringify({ public_id, tag }),
                 headers: { 'Content-Type': 'application/json' },

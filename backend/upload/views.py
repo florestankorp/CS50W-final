@@ -43,29 +43,32 @@ class DeleteImageAPIView(APIView):
             return Response({"message": str(error)}, status=400)
 
 
-class LikeImageAPIView(APIView):
+class TagImageAPIView(APIView):
     @staticmethod
     def put(request):
         FAV = "fav"
         TAGS = "tags"
+        RATE = "rate"
+
         try:
             public_id = request.data.get("public_id")
+            tag = request.data.get("tag")
             image_info = cloudinary.api.resource(public_id)
 
-            if TAGS in image_info and FAV in image_info[TAGS]:
+            if TAGS in image_info and tag in image_info[TAGS]:
                 response = cloudinary.uploader.remove_tag(
-                    FAV, public_ids=public_id
+                    tag, public_ids=public_id
                 )
-                print("Removed tag", FAV, "from:", public_id)
+                print("Removed tag", tag, "from:", public_id)
                 return Response(
                     {"status": "success", "data": response}, status=200
                 )
             else:
                 response = cloudinary.uploader.add_tag(
-                    FAV, public_ids=public_id
+                    tag, public_ids=public_id
                 )
 
-                print("Added tag", FAV, "to:", public_id)
+                print("Added tag", tag, "to:", public_id)
                 return Response(
                     {"status": "success", "data": response}, status=200
                 )

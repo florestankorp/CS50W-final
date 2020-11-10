@@ -27,6 +27,7 @@ export interface ImageState {
     fetchingImagesPending: boolean;
     likeImagePendingId: string;
     deleteImagePendingId: string;
+    rateImagePendingId: string;
     errors: ImageErrors;
 }
 

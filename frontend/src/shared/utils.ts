@@ -1,3 +1,4 @@
+import { TAGS } from './constants';
 import { Image } from './models';
 
 export function makeChunks(images: Image[], chunkSize: number): Image[][] {
@@ -11,4 +12,18 @@ export function makeChunks(images: Image[], chunkSize: number): Image[][] {
     }
 
     return arr;
+}
+
+export function getRating(tags: string[]): number {
+    const ratings = tags.filter((tag: string) => tag !== TAGS.FAV);
+    if (ratings.length) {
+        const ratingsArray: number[] = ratings.map((rating) => {
+            const res = rating.split(':')[1];
+            return parseInt(res);
+        });
+
+        return Math.max(...ratingsArray);
+    }
+
+    return 0;
 }
