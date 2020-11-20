@@ -1,14 +1,17 @@
 import React, { ReactElement } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { logOut, selectAuthLoginState } from '../../shared';
 import './Navbar.scss';
 export function Navbar(): ReactElement {
     const dispatch = useDispatch();
+    const history = useHistory();
+
     const isAuthenticated = useSelector(selectAuthLoginState);
 
     const handleLogOut = () => {
         dispatch(logOut());
+        history.push('/');
     };
 
     return (

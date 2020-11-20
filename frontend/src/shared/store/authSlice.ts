@@ -20,6 +20,7 @@ export const authSlice = createSlice({
         logOut: (state: AuthState) => {
             sessionStorage.clear();
             Object.assign(state, initialState);
+            sessionStorage.setItem(UPLOAD_APP_KEY, JSON.stringify(initialSession));
         },
         authInit: (state: AuthState) => {
             const _sessionStorage: Session = JSON.parse(sessionStorage.getItem(UPLOAD_APP_KEY) || '{}');

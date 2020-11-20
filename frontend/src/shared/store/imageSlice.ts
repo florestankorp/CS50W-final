@@ -26,8 +26,11 @@ export const imageSlice = createSlice({
         },
         fetchImagesSuccess: (state: ImageState, { payload }) => {
             state.fetchingImagesPending = false;
-            state.errors.fetch = [];
             state.images = payload.data.resources;
+
+            state.errors.delete = [];
+            state.errors.fetch = [];
+            state.errors.like = [];
         },
         fetchImagesFailure: (state: ImageState, { payload }) => {
             state.fetchingImagesPending = false;
@@ -38,6 +41,9 @@ export const imageSlice = createSlice({
         },
         likeImageSuccess: (state: ImageState) => {
             state.likeImagePendingId = '';
+
+            state.errors.delete = [];
+            state.errors.fetch = [];
             state.errors.like = [];
         },
         toggleLikedAction: (state: ImageState, { payload }) => {
@@ -63,6 +69,10 @@ export const imageSlice = createSlice({
             const index = state.images.indexOf(deletedImage!);
 
             state.images.splice(index, 1);
+
+            state.errors.delete = [];
+            state.errors.fetch = [];
+            state.errors.like = [];
         },
         deleteImageFailure: (state: ImageState, { payload }) => {
             state.deleteImagePendingId = '';
@@ -85,6 +95,11 @@ export const {
 } = imageSlice.actions;
 
 export const selectedImages = (state: RootState): Image[] => state.image.images;
+export const fetchingImageErrors = (state: RootState): string[] => state.image.errors.fetch;
+export const likeImageErrors = (state: RootState): string[] => state.image.errors.like;
+export const deleteImageErrors = (state: RootState): string[] => state.image.errors.delete;
+export const imageHasErrors = (state: RootState): boolean =>
+    !!state.image.errors.like.length || !!state.image.errors.delete.length || !!state.image.errors.fetch.length;
 export const fetchingImagesPending = (state: RootState): boolean => state.image.fetchingImagesPending;
 export const likeImagePending = (id: string) => (state: RootState): boolean => state.image.likeImagePendingId === id;
 export const rateImagePending = (id: string) => (state: RootState): boolean => state.image.rateImagePendingId === id;
@@ -106,11 +121,13 @@ export function fetchImages(tag?: string) {
             const response = await fetch(`${LIST_URL}${param}`);
             const data = await response.json();
             if (response.ok) {
-                dispatch(fetchImagesSuccess(data));
+                if (data.data.resources.length) {
+                    dispatch(fetchImagesSuccess(data));
+                } else {
+                    dispatch(fetchImagesFailure('No images found'));
+                }
             } else {
-                const key = Object.keys(data)[0];
-                const message = data[key] ? data[key][0] : response.statusText;
-                throw Error(message);
+                throw Error(data.message);
             }
         } catch (error) {
             dispatch(fetchImagesFailure(error.message));
