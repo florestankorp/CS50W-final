@@ -1,0 +1,16 @@
+AUTH
+	* register
+	* log in
+	* log out
+	
+IMAGE UPLOAD
+	* error handling
+	* uploaded and stored
+	
+IMAGE INTERACTION
+	* error handling
+	* like image -> add tag
+	* un-like -> remove tag
+	* add rating -> add tag
+	* delete image
+	
