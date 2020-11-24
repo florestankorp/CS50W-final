@@ -20,13 +20,12 @@ export const COLORS = {
     BLUE: '#1A8CC9',
 };
 
-const API_REMOTE_URL = 'http://192.168.0.106:8001';
 const API_BASE_URL = 'http://localhost:8001';
 
-export const REGISTER_URL = `${API_REMOTE_URL}/api/auth/register`;
-export const LOGIN_URL = `${API_REMOTE_URL}/api/auth/login`;
-export const UPLOAD_URL = `${API_REMOTE_URL}/upload`;
-export const LIST_URL = `${API_REMOTE_URL}/list`;
-export const TAG_URL = `${API_REMOTE_URL}/tag`;
-export const DELETE_URL = `${API_REMOTE_URL}/delete`;
+export const REGISTER_URL = `${API_BASE_URL}/api/auth/register`;
+export const LOGIN_URL = `${API_BASE_URL}/api/auth/login`;
+export const UPLOAD_URL = `${API_BASE_URL}/upload`;
+export const LIST_URL = `${API_BASE_URL}/list`;
+export const TAG_URL = `${API_BASE_URL}/tag`;
+export const DELETE_URL = `${API_BASE_URL}/delete`;
 export const TYPE_ERROR = 'Failed to fetch';

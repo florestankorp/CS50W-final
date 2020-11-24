@@ -6,6 +6,7 @@ import './Navbar.scss';
 export function Navbar(): ReactElement {
     const dispatch = useDispatch();
     const history = useHistory();
+    // needed for hamburger-menu on mobile
     const [isActive, setisActive] = useState(false);
 
     const isAuthenticated = useSelector(selectAuthLoginState);
