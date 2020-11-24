@@ -4,9 +4,9 @@ This is the project I submitted as final assignment for _Harvard's CS50W - Web D
 
 In the following paragraphs I want to outline what I did and, where applicable, why I did it.
 
-It was my goal build something I was proud of, that looked nice, worked well, but also added utility to my own life. I took this opportunity to experiment with ReactJS because I wanted to experiment with the latest in web development, learn new skills and as I said, also building something useful.
+It was my goal to build something I was proud of, that looked nice, worked well, but also added utility to my own life. I took this opportunity to experiment with ReactJS because I wanted to try out the latest and greatest in web development, learn new skills and as I said, actually build something useful.
 
-As a photographer I always relied on services built by others to assemble and publish my portfolio's. This time however I wanted to design everything myself from scratch!
+As a photographer I always relied on services built by others to assemble and publish my online portfolio's. This time however I wanted to design everything myself from scratch!
 
 In essence, this application is the admin panel for a portfolio website I want to build in the coming months. As photographer I wanted to have an application where I can upload, rate and select the images that I will show to my clients later on.
 
@@ -15,6 +15,7 @@ So, while they will only see a carefully curated selection in the end, I will be
 # Design
 
 ```
+
 
                     REQUEST:                                            REQUEST:
                     If tag is provided (e.g. 'fav')                     * Credentials for auth
@@ -25,9 +26,9 @@ So, while they will only see a carefully curated selection in the end, I will be
                     plan usage is not exceeded!
 
 
-+------------+      <--------------------       +----------------+      <--------------------       +------------+
-| CLOUDINARY |                                  | DRF (REST API) |                                  |   REACT-JS |
-+------------+      -------------------->       +----------------+      -------------------->       +------------+
++------------+      <--------------------       +----------------+      <--------------------       +--------------+
+| CLOUDINARY |                                  | DRF (REST API) |                                  |   REACT-JS   |
++------------+      -------------------->       +----------------+      -------------------->       +--------------+
 
 Image storage       RESPONSE:                   Serialization           RESPONSE:
                     Base64 images               Authentication          * auth response
@@ -46,15 +47,36 @@ As one of the leading use-cases and implementations of JavaScript today this fra
 
 ## Why Django Rest Framework (DRF)?
 
-As the view part of my application and templates would be handled solely by the ReactJS frontend (separation of concerns) I was looking for a way to disable all the features of Django I would not be needing such as the Jinja2 templates and views, which lead me to discover DRF, which is a lightweight alternative that would let me use all the things I had picked up about it in the course of CS50W, while having a much smaller memory footprint that the full fledged Django framework.
+As the view part of my application and templates would be handled solely by the ReactJS frontend (separation of concerns) I was looking for a way to disable all the features of Django I would not be needing such as the Jinja2 templates and views, which lead me to discover DRF, which is a lightweight alternative that would let me use all the things I had learned about in this course, while having a much smaller memory footprint than the full fledged Django framework.
 
 **This is now my new dream stack!**
 
 ## Why Cloudinary?
 
-I opted for a third party storage platform because that seemed like the most robust and safe option in the long run. So, instead of having to deal with the overhead of learning how to store and optimize for image retrieval in Djano, plus having to have my own storage, I decided to 'outsource' that task to Cloudinary :)
+I opted for a third party storage platform because that seemed like the most robust and safe option in the long run. So, instead of having to deal with the overhead of learning how to store and optimize for image retrieval in Djano, plus having to have my own storage, I decided to 'outsource' that task to Cloudinary. They have exellent documentation and a very versatile SDK that binds very well with the Django framework.
+
+# Signing up to Cloudinary
+
+This app requires you to have a Cloudinary account. If you don't already have one ho ahead and [register here](https://cloudinary.com/users/register/free) then add the secrets to the secrets file (see below). Because their API uses Basic Authentication over secure HTTP they require your Cloudinary API Key and API Secret (which can be found on the Dashboard page of your Cloudinary console).
+
+**Note**: Always be careful who you share your credentials with and make sure to keep your API keys and secrets out of version control!
+
+## Secret
+
+Create a file called **secrets.py** in `./backend/main` and add the following values:
+
+```
+CLOUD_NAME = "your Cloudinary cloud name"
+API_KEY = "your Cloudinary api key"
+API_SECRET = "your Cloudinary api secret"
+
+# it is also advised to keep your Django secret key in this file and add it to .gitignore
+SECRET_KEY = "your Django secret key"
+```
 
 # Before you run
+
+If you are using Docker, you can skip this section and go straight to [Running the applications with Docker](#with-docker)
 
 ## Frontend
 
@@ -91,28 +113,9 @@ $ py manage.py makemigrations
 $ py manage.py migrate
 ```
 
-This should create your migrations and `db.sqlite3` file,
+This should create your migrations and `db.sqlite3` file
 
 # Running the applications
-
-## ...with Bash script
-
-In the root of the project there is a bash script for starting the front- and the backend called **run.sh**, once you've made the script [executable](https://www.andrewcbancroft.com/blog/musings/make-bash-script-executable/) then running the following command from the root of the project:
-
-```
-$ sh run.sh
-```
-
-This should open two terminal windows with the development servers of the front- and backend applications.
-You can access the application by going to `http://localhost:3000/` where you should be greeted with the login screen!
-
-If the script fails to run you might have to make the following scripts excecutable as well:
-`./backend.sh`
-`./frontend.sh`
-
-These are the scripts that get called by the `run.sh` script.
-
-If you don't want to use this approach, you can always run the applications...
 
 ## ...by starting them manually
 
@@ -134,6 +137,54 @@ $ python3 manage.py runserver 8001
 ```
 
 **Note**: The Django server will run on port 8001. If you wish to change this don't forget to update the **API_BASE_URL** in `./frontend/src/shared/constants.ts`
+
+## ...with Docker
+
+Requirements:
+
+- [Docker](https://docs.docker.com/engine/install/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+**Frontend**
+In the root of the project run:
+
+```
+$ cd frontend
+$ docker build -t frontend:dev .
+$ docker run -it --rm -v ${PWD}:/frontend -v /frontend/node_modules -p 3001:3000 -e CHOKIDAR_USEPOLLING=true frontend:dev
+```
+
+> If you run into an "ENOENT: no such file or directory, open '/frontend/package.json". error, you may need to add an additional volume: -v /frontend/package.json.
+
+**Backend**
+Then, again from the root of the project run:
+
+```
+$ cd backend
+$ docker build -t backend:dev .
+$ docker run -it --rm -v ${PWD}:/backend -p 8001:8000 backend:dev
+```
+
+## Docker-Compose
+
+TODO
+
+**What’s happening here?**
+
+1. The [docker run](https://docs.docker.com/engine/reference/commandline/run/) command creates and runs a new container instance from the image we just created.
+2. `-it` starts the container in [interactive mode](https://stackoverflow.com/questions/48368411/what-is-docker-run-it-flag). Why is this necessary? As of version 3.4.1, `react-scripts` exits after start-up (unless CI mode is specified) which will cause the container to exit. Thus the need for interactive mode.
+3. `--rm` [removes](https://docs.docker.com/engine/reference/run/#clean-up---rm) the container and volumes after the container exits.
+4. `-v ${PWD}:/app` mounts the code into the container at “/app”.
+
+> {PWD} may not work on Windows. See this Stack Overflow question for more info.
+
+5. Since we want to use the container version of the “node_modules” folder, we configured another volume: `-v /app/node_modules`. You should now be able to remove the local “node_modules” flavor.
+6. `-p 3001:3000` exposes port 3000 to other Docker containers on the same network (for inter-container communication) and port 3001 to the host.
+
+For more, review [this](https://stackoverflow.com/questions/22111060/what-is-the-difference-between-expose-and-publish-in-docker) Stack Overflow question.
+
+Finally, -e CHOKIDAR_USEPOLLING=true enables a polling mechanism via chokidar (which wraps fs.watch, fs.watchFile, and fsevents) so that hot-reloading will work.
+Open your browser to http://localhost:3001/ and you should see the app. Try making a change to the App component within your code editor. You should see the app hot-reload. Kill the server once done.
 
 # Dependencies
 
@@ -175,3 +226,7 @@ As for the styling dependencies I was curious and excited to work with something
 **Resource not found (404)**: Triggers Error component to be shown on every page in the frontend with the error message
 **Rate limit exceeded (400)**:Triggers Error component to be shown on every page in the frontend with the error message
 **Unauthorized (400)**:Triggers Error component to be shown on login page in the frontend with the error message
+
+# Resources
+
+https://mherman.org/blog/dockerizing-a-react-app/
