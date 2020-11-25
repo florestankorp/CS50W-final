@@ -148,6 +148,7 @@ Requirements:
 - [Docker Compose](https://docs.docker.com/compose/install/)
 
 **Frontend**
+
 In the root of the project run:
 
 ```
@@ -159,6 +160,7 @@ $ docker run -it --rm -v ${PWD}:/frontend -v /frontend/node_modules -p 3001:3000
 > If you run into an "ENOENT: no such file or directory, open '/frontend/package.json". error, you may need to add an additional volume: -v /frontend/package.json.
 
 **Backend**
+
 Then, again from the root of the project run:
 
 ```
