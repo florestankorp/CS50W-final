@@ -81,6 +81,7 @@ If you are using Docker, you can skip this section and go straight to [Running t
 ## Frontend
 
 **1) Install the dependencies using npm**
+
 Requirements:
 
 - [NodeJS](https://nodejs.org/en/)
@@ -95,6 +96,7 @@ This should install the frontend dependencies and create a folder called `node_m
 ## Backend
 
 **1) Install the dependencies using pip3**
+
 Requirements:
 
 - Python3
@@ -165,10 +167,6 @@ $ docker build -t backend:dev .
 $ docker run -it --rm -v ${PWD}:/backend -p 8001:8000 backend:dev
 ```
 
-## Docker-Compose
-
-TODO
-
 **What’s happening here?**
 
 1. The [docker run](https://docs.docker.com/engine/reference/commandline/run/) command creates and runs a new container instance from the image we just created.
@@ -185,6 +183,10 @@ For more, review [this](https://stackoverflow.com/questions/22111060/what-is-the
 
 Finally, -e CHOKIDAR_USEPOLLING=true enables a polling mechanism via chokidar (which wraps fs.watch, fs.watchFile, and fsevents) so that hot-reloading will work.
 Open your browser to http://localhost:3001/ and you should see the app. Try making a change to the App component within your code editor. You should see the app hot-reload. Kill the server once done.
+
+## Docker-Compose
+
+TODO
 
 # Dependencies
 
