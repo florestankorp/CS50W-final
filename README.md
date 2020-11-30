@@ -1,6 +1,6 @@
-# Welcome
+# Photo Management Admin Interface
 
-This is the project I submitted as final assignment for _Harvard's CS50W - Web Development with Python and JavaScript_.
+Welcome to my [final assignment](https://cs50.harvard.edu/web/2020/projects/final/capstone/) for **[Harvard's CS50W - Web Development with Python and JavaScript](https://courses.edx.org/courses/course-v1:HarvardX+CS50W+Web/course/)**
 
 In the following paragraphs I want to outline what I did and, where applicable, why I did it.
 
@@ -14,32 +14,13 @@ So, while they will only see a carefully curated selection in the end, I will be
 
 # Design
 
-```
+## Local development
 
+![Diagram](diag.png)
 
-                    REQUEST:                                            REQUEST:
-                    If tag is provided (e.g. 'fav')                     * Credentials for auth
-                    fetch images for that tag.                          (email and p/w)
-                    If no tag is provided fetch all                     * Tags for fetching images
-                    images. Limited in API layer to                     from cloud storage
-                    max 50 so rate limit and free                       * Image CRUD
-                    plan usage is not exceeded!
+## Deployment
 
-
-+------------+      <--------------------       +----------------+      <--------------------       +--------------+
-| CLOUDINARY |                                  | DRF (REST API) |                                  |   REACT-JS   |
-+------------+      -------------------->       +----------------+      -------------------->       +--------------+
-
-Image storage       RESPONSE:                   Serialization           RESPONSE:
-                    Base64 images               Authentication          * auth response
-                                                Security                * Base64 images from cloud
-                                                User Database           storage
-                                                Cloudinary SDK
-
-
-
-
-```
+TODO...
 
 ## Why ReactJS?
 
@@ -47,17 +28,15 @@ As one of the leading use-cases and implementations of JavaScript today this fra
 
 ## Why Django Rest Framework (DRF)?
 
-As the view part of my application and templates would be handled solely by the ReactJS frontend (separation of concerns) I was looking for a way to disable all the features of Django I would not be needing such as the Jinja2 templates and views, which lead me to discover DRF, which is a lightweight alternative that would let me use all the things I had learned about in this course, while having a much smaller memory footprint than the full fledged Django framework.
-
-**This is now my new dream stack!**
+As the view part of my application and templates would be handled solely by the ReactJS frontend (separation of concerns) I was looking for a way to disable all the features of Django I would not be needing such as the Jinja2 templates and views, which lead me to discover DRF, which is a lightweight alternative that would let me use all the things I had learned about in [this course](https://courses.edx.org/courses/course-v1:HarvardX+CS50W+Web/course/), while having a much smaller memory footprint than the full fledged Django framework.
 
 ## Why Cloudinary?
 
-I opted for a third party storage platform because that seemed like the most robust and safe option in the long run. So, instead of having to deal with the overhead of learning how to store and optimize for image retrieval in Djano, plus having to have my own storage, I decided to 'outsource' that task to Cloudinary. They have exellent documentation and a very versatile SDK that binds very well with the Django framework.
+I opted for a third party storage platform because that seemed like the most robust and safe option in the long run. So, instead of having to deal with the overhead of learning how to store and optimize for image retrieval in Django, plus having to have my own storage, I decided to 'outsource' that task to Cloudinary. They have excellent documentation and a very versatile SDK that binds very well with the Django framework.
 
 # Signing up to Cloudinary
 
-This app requires you to have a Cloudinary account. If you don't already have one ho ahead and [register here](https://cloudinary.com/users/register/free) then add the secrets to the secrets file (see below). Because their API uses Basic Authentication over secure HTTP they require your Cloudinary API Key and API Secret (which can be found on the Dashboard page of your Cloudinary console).
+This app requires you to have a Cloudinary account. If you don't already have one go ahead and [register here](https://cloudinary.com/users/register/free) then add the secrets to the secrets file (see below). Because their API uses Basic Authentication over secure HTTP they require your Cloudinary API Key and API Secret (which can be found on the Dashboard page of your Cloudinary console).
 
 **Note**: Always be careful who you share your credentials with and make sure to keep your API keys and secrets out of version control!
 
@@ -74,78 +53,24 @@ API_SECRET = "your Cloudinary api secret"
 SECRET_KEY = "your Django secret key"
 ```
 
-# Before you run
+![Screenshot](screenshot.png)
 
-If you are using Docker, you can skip this section and go straight to [Running the applications with Docker](#with-docker)
-
-## Frontend
-
-**1) Install the dependencies using npm**
-
-Requirements:
-
-- [NodeJS](https://nodejs.org/en/)
-
-```
-$ cd frontend
-$ npm install
-```
-
-This should install the frontend dependencies and create a folder called `node_modules`
-
-## Backend
-
-**1) Install the dependencies using pip3**
-
-Requirements:
-
-- Python3
-- Pip3
-
-```
-$ cd backend
-$ pip3 install -r requirements.txt
-```
-
-**2) Django migrations and setup**
-While in the `./backend` folder run the following commands:
-
-```
-$ py manage.py makemigrations
-$ py manage.py migrate
-```
-
-This should create your migrations and `db.sqlite3` file
-
-# Running the applications
-
-## ...by starting them manually
-
-**Frontend**
-
-```
-$ cd frontend
-$ npm run start
-```
-
-This will start a development server on `http://localhost:3000/`
-**Note**: If you wish to run the frontend development server on another port, don't forget to update the CORS policy on the Django settings!
-
-**Backend**
-
-```
-$ cd backend
-$ python3 manage.py runserver 8001
-```
-
-**Note**: The Django server will run on port 8001. If you wish to change this don't forget to update the **API_BASE_URL** in `./frontend/src/shared/constants.ts`
-
-## ...with Docker
+# Running the dev servers
 
 Requirements:
 
 - [Docker](https://docs.docker.com/engine/install/)
 - [Docker Compose](https://docs.docker.com/compose/install/)
+
+## ...with docker-compose
+
+`docker-compose` uses the Dockerfiles in the respective folders for frontend and backend. From the root of the project run:
+
+`$ docker-compose run`
+
+The app is now running on `http://localhost:3001/`
+
+## ...with docker-run
 
 **Frontend**
 
@@ -184,11 +109,35 @@ $ docker run -it --rm -v ${PWD}:/backend -p 8001:8000 backend:dev
 For more, review [this](https://stackoverflow.com/questions/22111060/what-is-the-difference-between-expose-and-publish-in-docker) Stack Overflow question.
 
 Finally, -e CHOKIDAR_USEPOLLING=true enables a polling mechanism via chokidar (which wraps fs.watch, fs.watchFile, and fsevents) so that hot-reloading will work.
-Open your browser to http://localhost:3001/ and you should see the app. Try making a change to the App component within your code editor. You should see the app hot-reload. Kill the server once done.
+Open your browser to `http://localhost:3001/` and you should see the app. Try making a change to the App component within your code editor. You should see the app hot-reload. Kill the server once done.
 
-## Docker-Compose
+# Features and usage
 
-TODO
+1. Register user
+2. Log in / log out
+3. Upload images through ReactJS frontend
+4. Upload images through Cloudinary interface
+5. Like / un-like images
+6. View favs
+7. Delete images
+
+# Validations and error handling
+
+## Frontend
+
+**Username (email)**: See **EMAIL_REGEX** in `./frontend/src/shared/constants.ts`
+**Password**: Password has to be at least 8 characters long
+**No image selected for upload**: Error thrown prompting to chose a file
+**No images in cloud storage**: Frontend error prompting user to upload images
+**No images in Favs**: Frontend message prompting user to like images
+
+## Backend
+
+**API call pending state**: Triggers a spinner in the FE for uploading images, toggle likes, deleting and auth calls
+**Server offline**: Triggers Error component to be shown on every page in the frontend with the error message
+**Resource not found (404)**: Triggers Error component to be shown on every page in the frontend with the error message
+**Rate limit exceeded (400)**:Triggers Error component to be shown on every page in the frontend with the error message
+**Unauthorized (400)**:Triggers Error component to be shown on login page in the frontend with the error message
 
 # Dependencies
 
@@ -213,24 +162,18 @@ The combination of these tools helps me to catch errors while writing my code an
 
 As for the styling dependencies I was curious and excited to work with something new, so I decided to go with Bulma over Bootstrap. This helped with giving the application a modern look and feel while maintaining a focus on responsive layouts and being setup mobile first. Plus the Fontawesome icons add a lot of visual appeal to the cards...
 
-# Validations and error handling
+# Resources and links
 
-## Frontend
+https://cloudinary.com/documentation/image_upload_api_reference
 
-**Username (email)**: See **EMAIL_REGEX** in `./frontend/src/shared/constants.ts`
-**Password**: Password has to be at least 8 characters long
-**No image selected for upload**: Error thrown prompting to chose a file
-**No images in cloud storage**: Frontend error prompting user to upload images
-**No images in Favs**: Frontend message prompting user to like images
-
-## Backend
-
-**API call pending state**: Triggers a spinner in the FE for uploading images, toggle likes, deleting and auth calls
-**Server offline**: Triggers Error component to be shown on every page in the frontend with the error message
-**Resource not found (404)**: Triggers Error component to be shown on every page in the frontend with the error message
-**Rate limit exceeded (400)**:Triggers Error component to be shown on every page in the frontend with the error message
-**Unauthorized (400)**:Triggers Error component to be shown on login page in the frontend with the error message
-
-# Resources
-
+**Dockerizing a React App**
 https://mherman.org/blog/dockerizing-a-react-app/
+
+**React useEffect run conditionally**
+https://stackoverflow.com/questions/64712509/react-useeffect-run-conditionally
+
+**Separate states per child React component with useSelector hook**
+https://stackoverflow.com/questions/64743304/separate-states-per-child-react-component-with-useselector-hook
+
+**Why are my actions not being called in Redux-Toolkit slice**
+https://stackoverflow.com/questions/64736836/why-are-my-actions-not-being-called-in-redux-toolkit-slice

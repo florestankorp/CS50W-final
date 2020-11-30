@@ -1,16 +1,19 @@
 version: '3.3'
 services:
   backend:
+    image: backend:dev
     volumes:
-      - '${PWD}:/backend'
+      - '${PWD}/backend:/backend'
     ports:
       - '8001:8000'
     build:
       context: ./backend/
       dockerfile: Dockerfile
   frontend:
+    image: 'frontend:dev'
+    stdin_open: true
     volumes:
-      - '${PWD}:/frontend'
+      - '${PWD}/frontend:/frontend'
       - /frontend/node_modules
     ports:
       - '3001:3000'
