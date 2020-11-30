@@ -16,7 +16,7 @@ So, while they will only see a carefully curated selection in the end, I will be
 
 ## Local development
 
-![Diagram](diag.png)
+![Diagram](docs/diag.png)
 
 ## Deployment
 
@@ -53,7 +53,7 @@ API_SECRET = "your Cloudinary api secret"
 SECRET_KEY = "your Django secret key"
 ```
 
-![Screenshot](screenshot.png)
+![Screenshot](docs/screenshot.png)
 
 # Running the dev servers
 
