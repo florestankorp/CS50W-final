@@ -18,7 +18,7 @@ export function Navbar(): ReactElement {
     };
 
     return (
-        <nav className="navbar is-fixed-top">
+        <nav className="navbar is-fixed-top is-dark">
             <div className="navbar-brand">
                 <a
                     onClick={() => setisActive(!isActive)}

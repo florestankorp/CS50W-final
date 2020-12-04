@@ -1,4 +1,5 @@
 AUTH
+	* validations
 	* register
 	* log in
 	* log out

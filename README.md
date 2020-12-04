@@ -1,4 +1,4 @@
-# Photo Management Admin Interface
+# Photo Management Interface
 
 Welcome to my [final assignment](https://cs50.harvard.edu/web/2020/projects/final/capstone/) for **[Harvard's CS50W - Web Development with Python and JavaScript](https://courses.edx.org/courses/course-v1:HarvardX+CS50W+Web/course/)**
 
@@ -8,9 +8,17 @@ It was my goal to build something I was proud of, that looked nice, worked well,
 
 As a photographer I always relied on services built by others to assemble and publish my online portfolio's. This time however I wanted to design everything myself from scratch!
 
-In essence, this application is the admin panel for a portfolio website I want to build in the coming months. As photographer I wanted to have an application where I can upload, rate and select the images that I will show to my clients later on.
+In essence, this application is the admin panel for a portfolio website I want to build in the coming months. As photographer I wanted to have an application where I can upload, rate and select the images that I will show to my clients later on: **My Favs!**
 
 So, while they will only see a carefully curated selection in the end, I will be working behind the scenes in this app to like, rate and delete images, making sure I can build a dynamic selection by either uploading images from this app or dragging and dropping them in the cloud storage provider for images (Cloudinary), then fetching them to display in my admin panel and later the portfolio frontend.
+
+Have fun liking, rating and deleting!
+For questions and inquiries please feel free to contact me at: florestankorp@gmail.com
+
+<3
+
+Florestan Korp,
+November 2020
 
 # Design
 
@@ -18,9 +26,9 @@ So, while they will only see a carefully curated selection in the end, I will be
 
 ![Diagram](docs/diag.png)
 
-## Deployment
+## Why Docker?
 
-TODO...
+Docker helped me keep my local machine clean of, not having to pollute it with configs and different runtime environments. Being able to share my project with my mentor and show it to colleagues during development was also a big plus. Docker is a nice and simple way to get up and running quickly on any machine while not having to deal with the hassle of installing Python virtual environments or having to upgrade your NodeJS version in order for you to run this app, so essentially it lowered the barrier for working with different runtime environments, sharing my idea and getting feedback quickly.
 
 ## Why ReactJS?
 
@@ -125,7 +133,11 @@ Open your browser to `http://localhost:3001/` and you should see the app. Try ma
 
 ## Frontend
 
-**Username (email)**: See **EMAIL_REGEX** in `./frontend/src/shared/constants.ts`
+Validation takes place in the `Register.tsx` component.
+
+**Username (email)**:
+See **EMAIL_REGEX** in `./frontend/src/shared/constants.ts`
+
 **Password**: Password has to be at least 8 characters long
 **No image selected for upload**: Error thrown prompting to chose a file
 **No images in cloud storage**: Frontend error prompting user to upload images
@@ -164,10 +176,13 @@ As for the styling dependencies I was curious and excited to work with something
 
 # Resources and links
 
+**Cloudinary SDK API**
 https://cloudinary.com/documentation/image_upload_api_reference
 
 **Dockerizing a React App**
 https://mherman.org/blog/dockerizing-a-react-app/
+
+## My Stackoverflow questions
 
 **React useEffect run conditionally**
 https://stackoverflow.com/questions/64712509/react-useeffect-run-conditionally
