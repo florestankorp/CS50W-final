@@ -1,6 +1,6 @@
 from django.urls import path
 
-from upload.views import (
+from image.views import (
     DeleteImageAPIView,
     ListImagesAPIView,
     TagImageAPIView,
@@ -8,7 +8,7 @@ from upload.views import (
 )
 
 urlpatterns = [
-    path("upload", UploadImageAPIView.as_view()),
+    path("image", UploadImageAPIView.as_view()),
     path("list", ListImagesAPIView.as_view()),
     path("tag", TagImageAPIView.as_view()),
     path("delete", DeleteImageAPIView.as_view()),

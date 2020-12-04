@@ -26,6 +26,96 @@ November 2020
 
 ![Diagram](docs/diag.png)
 
+## Important files and folder structure
+
+This project consists of the root folder which contains two main folders:
+
+- `./frontend`
+- `./backend`
+
+The root folder also contains a `./docs` folder which contains screenshots and diagrams.
+
+The most important file in the root folder is `docker-compose.yml` which is required to run the local dev servers by calling the `Dockerfile` in the respective front- and backend folders, each using different Docker images to build and run in separate containers, communicating withe each other and the cloud storage as seen in the diagram above.
+
+##`./frontend`
+
+This folder contains a ReactJS app. I will highlight some parts below:
+
+On the root level of the `./frontend` folder there is the **package.json** file which serves as project manifest and lists the dependencies of the project.
+
+Then there is the `Dockerfile` which contains the steps it takes to run the application as well as the runtime environment required for the application to run in the container.
+
+Then there are a few folders worth mentioning:
+
+- **node_modules**: contains the libraries needed to run the application: [Check out the key dependencies](#dependencies)
+
+- **public**: hosts public assets such as images and icons used in the app
+
+- **src**: this folder contains the main features of the app and will serve as the context for the following explanation.
+
+The source folder hosts the `features` folder, which comprise ReactJS components such as the registration form (`Register.tsx`), nav-bar (`NavBar.tsx`) or the index page (`Home.tsx`)
+
+It also hosts the `shared` folder which contains shared utilities, but most importantly shares the Redux store and slices implementing [Redux Toolkit](https://redux-toolkit.js.org/) an abstraction layer on top of the Redux state management pattern which makes working with the Redux store more manageable.
+
+Please pay special attention to these files:
+`./frontend/src/shared/store/authSlice.ts`
+`./frontend/src/shared/store/imageSlice.ts`
+
+These contain the calls to the Django backend in order to perform auth or image related queries!
+
+`authSlice.ts` also contains some cool functionality for session persistance of logged in users, so don't forget to check it out.
+
+I'm also quite proud of error handling in this app (more on that [here](#validations-and-error-handling)), but it is mainly handled in the `Favs.tsx` and `Home.tsx` component, which use the shared `Errors.tsx` component :)
+
+##`./backend`
+
+The backend folder has two files I want to highlight. First the `requirements.txt` file, which contains the dependencies for the Djanog project and then, same as for the frontend of course, the `Dockerfile`. Here you can see which commands are run when doing a `docker-compose up` from the root folder!
+
+**Note:** The root folder also contains the SQLite database.
+
+- **auth**: this folder contains the project for authentication API with the required validation and HTTP responses for auth queries from the frontend
+- **image**: this folder contains the endpoints and urls relating to the [Cloudinary SDK](https://cloudinary.com/documentation/image_upload_api_reference) a few of which I will highlight below
+- **main**: this is the root Django app and contains configuration and settings of the two projects I mentioned above
+
+Since the methods in the `./backend/auth` project are fairly self evident I want to highlight just the ones pertaining to the core features of this app, namely the ones in `./backend/image`. The methods I want to highlight in the `./backend/image` project are located in the `./backend/image/views.py` file.
+
+- **UploadImageAPIView**: When sending a POST request to `${API_BASE_URL}/upload` and a base64 string containing the image from the clientside upload, this endpoint will store the image in the Cloudinary storage.
+
+- **ListImagesAPIView**: GET requests to the `${API_BASE_URL}/list` endpoint will result in a response of images fitting the required tag, e.g. `fav` will only fetch images tagged with `fav`. If no matching tag is found ALL images are returned up to max. 50, to prevent the client from fetching the entire database :)
+
+- **TagImageAPIView**: whenever the client makes a PUT request to the `${API_BASE_URL}/tag` endpoint. This endpoint can receive either the `fav` tag, with which the client can toggle the liked status of an image or change the rating of an image by receiving for example `rate:1` for one star or `rate:5` for five stars.
+
+- **DeleteImageAPIView**: This method accepts a DELETE request to the `${API_BASE_URL}/delete` endpoint and removes the image identified by the id in the request body from the Cloudinary storage.
+
+> **Note:** Pay special attention to the **settings.py** folder in `./backend/main`. This file contains the whitelisted CORS policy for working with the frontend as well as references to the secrets required to communicate with the cloud storage.
+
+## Models
+
+I want to highlight the Django model for the image that gets stored in Cloudinary and can be found in `./backend/image/models.py`:
+
+```Python
+from cloudinary.models import CloudinaryField
+from django.db import models
+
+
+class Photo(models.Model):
+    create_time = models.DateTimeField(auto_now_add=True)
+    title = models.CharField("Title (optional)", max_length=200, blank=True)
+    image = CloudinaryField("image")
+
+    def __str__(self):
+        try:
+            public_id = self.image.public_id
+        except AttributeError:
+            public_id = ""
+        return "Photo <%s:%s>" % (self.title, public_id)
+
+```
+
+Note the use of the utility provided by the Cloudinary SDK here, which helps me store the base64 image from the client to my cloud storage account and then later helps me serialize it back from the backend response received from CLoudinary when calling their fetch API. Awesome stuff!
+
+# App design and architecture
+
 ## Why Docker?
 
 Docker helped me keep my local machine clean of, not having to pollute it with configs and different runtime environments. Being able to share my project with my mentor and show it to colleagues during development was also a big plus. Docker is a nice and simple way to get up and running quickly on any machine while not having to deal with the hassle of installing Python virtual environments or having to upgrade your NodeJS version in order for you to run this app, so essentially it lowered the barrier for working with different runtime environments, sharing my idea and getting feedback quickly.
@@ -48,7 +138,7 @@ This app requires you to have a Cloudinary account. If you don't already have on
 
 **Note**: Always be careful who you share your credentials with and make sure to keep your API keys and secrets out of version control!
 
-## Secret
+## Secrets
 
 Create a file called **secrets.py** in `./backend/main` and add the following values:
 
@@ -74,7 +164,7 @@ Requirements:
 
 `docker-compose` uses the Dockerfiles in the respective folders for frontend and backend. From the root of the project run:
 
-`$ docker-compose run`
+`$ docker-compose up`
 
 The app is now running on `http://localhost:3001/`
 
@@ -120,6 +210,8 @@ Finally, -e CHOKIDAR_USEPOLLING=true enables a polling mechanism via chokidar (w
 Open your browser to `http://localhost:3001/` and you should see the app. Try making a change to the App component within your code editor. You should see the app hot-reload. Kill the server once done.
 
 # Features and usage
+
+**Note:** This app does not contain the images shown in the demo. There are no pictures unless you [register your own Cloudinary account](#signing-up-to-cloudinary), [add your secrets](#secrets) and upload some images for yourself ;)
 
 1. Register user
 2. Log in / log out

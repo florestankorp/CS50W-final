@@ -17,5 +17,5 @@ from django.urls import include, path
 
 urlpatterns = [
     path("", include("auth.urls")),
-    path("", include("upload.urls")),
+    path("", include("image.urls")),
 ]
