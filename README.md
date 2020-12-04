@@ -2,6 +2,8 @@
 
 Welcome to my [final assignment](https://cs50.harvard.edu/web/2020/projects/final/capstone/) for **[Harvard's CS50W - Web Development with Python and JavaScript](https://courses.edx.org/courses/course-v1:HarvardX+CS50W+Web/course/)**
 
+Check out the demo [HERE](https://youtu.be/-VD_RziRKkA)
+
 In the following paragraphs I want to outline what I did and, where applicable, why I did it.
 
 It was my goal to build something I was proud of, that looked nice, worked well, but also added utility to my own life. I took this opportunity to experiment with ReactJS because I wanted to try out the latest and greatest in web development, learn new skills and as I said, actually build something useful.
