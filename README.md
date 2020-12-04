@@ -37,7 +37,7 @@ The root folder also contains a `./docs` folder which contains screenshots and d
 
 The most important file in the root folder is `docker-compose.yml` which is required to run the local dev servers by calling the `Dockerfile` in the respective front- and backend folders, each using different Docker images to build and run in separate containers, communicating withe each other and the cloud storage as seen in the diagram above.
 
-##`./frontend`
+## ./frontend
 
 This folder contains a ReactJS app. I will highlight some parts below:
 
@@ -67,7 +67,7 @@ These contain the calls to the Django backend in order to perform auth or image 
 
 I'm also quite proud of error handling in this app (more on that [here](#validations-and-error-handling)), but it is mainly handled in the `Favs.tsx` and `Home.tsx` component, which use the shared `Errors.tsx` component :)
 
-##`./backend`
+## ./backend
 
 The backend folder has two files I want to highlight. First the `requirements.txt` file, which contains the dependencies for the Djanog project and then, same as for the frontend of course, the `Dockerfile`. Here you can see which commands are run when doing a `docker-compose up` from the root folder!
 
