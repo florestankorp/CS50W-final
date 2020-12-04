@@ -227,40 +227,40 @@ Open your browser to `http://localhost:3001/` and you should see the app. Try ma
 
 Validation takes place in the `Register.tsx` component.
 
-**Username (email)**:
+- **Username (email)**:
 See **EMAIL_REGEX** in `./frontend/src/shared/constants.ts`
 
-**Password**: Password has to be at least 8 characters long
-**No image selected for upload**: Error thrown prompting to chose a file
-**No images in cloud storage**: Frontend error prompting user to upload images
-**No images in Favs**: Frontend message prompting user to like images
+- **Password**: Password has to be at least 8 characters long
+- **No image selected for upload**: Error thrown prompting to chose a file
+- **No images in cloud storage**: Frontend error prompting user to upload images
+- **No images in Favs**: Frontend message prompting user to like images
 
 ## Backend
 
-**API call pending state**: Triggers a spinner in the FE for uploading images, toggle likes, deleting and auth calls
-**Server offline**: Triggers Error component to be shown on every page in the frontend with the error message
-**Resource not found (404)**: Triggers Error component to be shown on every page in the frontend with the error message
-**Rate limit exceeded (400)**:Triggers Error component to be shown on every page in the frontend with the error message
-**Unauthorized (400)**:Triggers Error component to be shown on login page in the frontend with the error message
+- **API call pending state**: Triggers a spinner in the FE for uploading images, toggle likes, deleting and auth calls
+- **Server offline**: Triggers Error component to be shown on every page in the frontend with the error message
+- **Resource not found (404)**: Triggers Error component to be shown on every page in the frontend with the error message
+- **Rate limit exceeded (400)**:Triggers Error component to be shown on every page in the frontend with the error message
+- **Unauthorized (400)**:Triggers Error component to be shown on login page in the frontend with the error message
 
 # Dependencies
 
 ## Backend
 
-**Django REST framework**: A Python based, lightweight yet powerful and flexible toolkit for building Web API's using only the core features of Django. I chose this because I decided to separate the view from my API layer into a separate frontend.
-**Cloudinary (SDK)**: Cloud-based image and video management services. It enables users to upload, store, manage, manipulate, and deliver images and video
-**Django-Rest-Knox**: Provides easy to use authentication allowing for common patterns
-**Django-CORS-Headers**: Required for allowing requests to the Django application from other origins
+- **Django REST framework**: A Python based, lightweight yet powerful and flexible toolkit for building Web API's using only the core features of Django. I chose this because I decided to separate the view from my API layer into a separate frontend.
+- **Cloudinary (SDK)**: Cloud-based image and video management services. It enables users to upload, store, manage, manipulate, and deliver images and video
+- **Django-Rest-Knox**: Provides easy to use authentication allowing for common patterns
+- **Django-CORS-Headers**: Required for allowing requests to the Django application from other origins
 
 ## Frontend
 
-**React**: JavaScript framework for building single page applications
-**ReduxJS-Toolkit**: State management tool and abstraction layer on top of redux pattern
-**Typescript**: Language based on JavaScript (superset) providing type safety and type checking
-**ES-Lint**: Syntax and code style checking; identifying and reporting JavaScript patterns
-**Prettier**: Code formatter
-**Bulma**: CSS framework based on flexbox and built with Sass
-**Fontawesome**: Icon library
+- **React**: JavaScript framework for building single page applications
+- **ReduxJS-Toolkit**: State management tool and abstraction layer on top of redux pattern
+- **Typescript**: Language based on JavaScript (superset) providing type safety and type checking
+- **ES-Lint**: Syntax and code style checking; identifying and reporting JavaScript patterns
+- **Prettier**: Code formatter
+- **Bulma**: CSS framework based on flexbox and built with Sass
+- **Fontawesome**: Icon library
 
 The combination of these tools helps me to catch errors while writing my code and without even leaving my IDE. They also help me deliver semantic, readable and well-formatted code that is maintainable.
 
