@@ -229,7 +229,6 @@ Validation takes place in the `Register.tsx` component.
 
 - **Username (email)**:
 See **EMAIL_REGEX** in `./frontend/src/shared/constants.ts`
-
 - **Password**: Password has to be at least 8 characters long
 - **No image selected for upload**: Error thrown prompting to chose a file
 - **No images in cloud storage**: Frontend error prompting user to upload images
